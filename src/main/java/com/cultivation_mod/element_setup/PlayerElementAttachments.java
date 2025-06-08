@@ -59,26 +59,29 @@ public class PlayerElementAttachments {
         else
             favored.add(AxisElements.YANG);
 
-        switch (entity.getRandom().nextBetween(1, 4)) {
+        switch (entity.getRandom().nextBetween(1, 5)) {
             case 1 -> favored.add(AxisElements.FIRE);
             case 2 -> favored.add(AxisElements.WATER);
             case 3 -> favored.add(AxisElements.AIR);
             case 4 -> favored.add(AxisElements.EARTH);
+            case 5 -> favored.add(AxisElements.LIGHTNING);
         }
         if (entity.getRandom().nextBetween(0, 100) < 50) {
-            switch (entity.getRandom().nextBetween(1, 4)) {
+            switch (entity.getRandom().nextBetween(1, 5)) {
                 case 1 -> favored.add(AxisElements.FIRE);
                 case 2 -> favored.add(AxisElements.WATER);
                 case 3 -> favored.add(AxisElements.AIR);
                 case 4 -> favored.add(AxisElements.EARTH);
+                case 5 -> favored.add(AxisElements.LIGHTNING);
             }
         }
         if (entity.getRandom().nextBetween(0, 100) < 25) {
-            switch (entity.getRandom().nextBetween(1, 4)) {
+            switch (entity.getRandom().nextBetween(1, 5)) {
                 case 1 -> favored.add(AxisElements.FIRE);
                 case 2 -> favored.add(AxisElements.WATER);
                 case 3 -> favored.add(AxisElements.AIR);
                 case 4 -> favored.add(AxisElements.EARTH);
+                case 5 -> favored.add(AxisElements.LIGHTNING);
             }
         }
 

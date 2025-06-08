@@ -28,6 +28,7 @@ public record PlayerElements(Map<AxisElements, Integer> playerElements, List<Axi
             elementLevels.put(AxisElements.WATER,buf.readInt());
             elementLevels.put(AxisElements.AIR,buf.readInt());
             elementLevels.put(AxisElements.EARTH,buf.readInt());
+            elementLevels.put(AxisElements.LIGHTNING,buf.readInt());
             elementLevels.put(AxisElements.YIN,buf.readInt());
             elementLevels.put(AxisElements.YANG,buf.readInt());
             List<AxisElements> favored = new ArrayList<>();
@@ -44,6 +45,7 @@ public record PlayerElements(Map<AxisElements, Integer> playerElements, List<Axi
             VarInts.write(buf,value.playerElements.get(AxisElements.WATER));
             VarInts.write(buf,value.playerElements.get(AxisElements.AIR));
             VarInts.write(buf,value.playerElements.get(AxisElements.EARTH));
+            VarInts.write(buf,value.playerElements.get(AxisElements.LIGHTNING));
             VarInts.write(buf,value.playerElements.get(AxisElements.YIN));
             VarInts.write(buf,value.playerElements.get(AxisElements.YANG));
             VarInts.write(buf,value.favoredElements.size());

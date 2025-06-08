@@ -16,6 +16,7 @@ public enum AxisElements implements StringIdentifiable {
     WATER("water"),
     AIR("air"),
     EARTH("earth"),
+    LIGHTNING("lightning"),
     YIN("yin"),
     YANG("yang"),
     ;
