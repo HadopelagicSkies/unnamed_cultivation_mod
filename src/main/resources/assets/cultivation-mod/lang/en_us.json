@@ -1,0 +1,15 @@
+{
+  "cultivation_mod.fire": "Fire",
+  "cultivation_mod.water": "Water",
+  "cultivation_mod.air": "Air",
+  "cultivation_mod.earth": "Earth",
+  "cultivation_mod.lightning": "Lightning",
+  "cultivation_mod.yin": "Yin",
+  "cultivation_mod.yang": "Yang",
+
+  "itemGroup.cultivation_mod": "Cultivation Mod",
+
+  "item.cultivation_mod.unaspected_item.info": "Stored Qi: %1$s",
+  "item.cultivation_mod.aspected_item.info": "Total Qi: %1$s",
+  "item.cultivation_mod.aspected_item.info2": "%1$s Qi: %2$s"
+}

@@ -13,10 +13,8 @@ import java.util.Map;
 
 public record PlayerElements(Map<AxisElements, Integer> playerElements, List<AxisElements> favoredElements) {
 
-    public static final Codec<Map<AxisElements, Integer>> ELEMENT_MAP_CODEC = Codec.unboundedMap(AxisElements.AXIS_ELEMENTS_CODEC,Codec.INT);
-
     public static final Codec<PlayerElements> PLAYER_ELEMENTS_CODEC = RecordCodecBuilder.create(i -> i.group(
-            ELEMENT_MAP_CODEC.fieldOf("playerElements").forGetter(PlayerElements::playerElements),
+            AxisElements.ELEMENT_MAP_CODEC.fieldOf("playerElements").forGetter(PlayerElements::playerElements),
             AxisElements.AXIS_ELEMENTS_CODEC.listOf().fieldOf("favoredElements").forGetter(PlayerElements::favoredElements)
     ).apply(i, PlayerElements::new));
 

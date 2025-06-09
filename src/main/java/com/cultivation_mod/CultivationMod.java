@@ -20,6 +20,11 @@ public class CultivationMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
+		CultivationModItems.initialize();
+		CultivationModBlocks.initialize();
+		CultivationModComponents.initialize();
+
+
 		ServerEntityEvents.ENTITY_LOAD.register((entity,serverWorld) ->{
 			if(entity instanceof PlayerEntity){
 				if(PlayerElementAttachments.getCultivationElements(entity) == null){
