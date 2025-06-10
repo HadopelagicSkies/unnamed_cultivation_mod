@@ -22,7 +22,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"cultivation-mod" {
+		"cultivation_mod" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}

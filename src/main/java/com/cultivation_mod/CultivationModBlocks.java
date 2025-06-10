@@ -18,7 +18,7 @@ public class CultivationModBlocks {
         ItemGroupEvents.modifyEntriesEvent(CultivationModItems.CULTIVATION_MOD_GROUP_KEY).register((itemGroup) ->
         {
             itemGroup.add(CultivationModBlocks.JADE_BLOCK.asItem());
-            itemGroup.add(CultivationModBlocks.JADE_CAULDRON_BLOCK.asItem());
+            itemGroup.add(CultivationModBlocks.JADE_CAULDRON.asItem());
         });
     }
 
@@ -46,9 +46,9 @@ public class CultivationModBlocks {
             "jade_block"
     );
 
-    public static final Block JADE_CAULDRON_BLOCK = register(JadeCauldron::new,
+    public static final Block JADE_CAULDRON = register(JadeCauldron::new,
             Block.Settings.create(),
-            "jade_cauldron_block"
+            "jade_cauldron"
     );
 
 }

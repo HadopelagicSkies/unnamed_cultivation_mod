@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CultivationMod implements ModInitializer {
-	public static final String MOD_ID = "cultivation-mod";
+	public static final String MOD_ID = "cultivation_mod";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -22,6 +22,7 @@ public class CultivationMod implements ModInitializer {
 
 		CultivationModItems.initialize();
 		CultivationModBlocks.initialize();
+		CultivationModBlockEntities.initialize();
 		CultivationModComponents.initialize();
 
 

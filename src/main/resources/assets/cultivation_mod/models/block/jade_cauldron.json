@@ -1,9 +1,10 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "jade_cauldron",
-		"particle": "jade_cauldron"
+		"0": "cultivation_mod:block/jade_cauldron",
+		"particle": "cultivation_mod:block/jade_cauldron"
 	},
 	"elements": [
 		{

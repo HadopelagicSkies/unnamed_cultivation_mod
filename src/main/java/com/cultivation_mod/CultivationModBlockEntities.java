@@ -15,9 +15,8 @@ public class CultivationModBlockEntities {
         return Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(CultivationMod.MOD_ID, path), blockEntityType);
     }
 
-
     public static final BlockEntityType<JadeCauldronEntity> JADE_CAULDRON_BLOCK_ENTITY = register(
-            "mutagen_synthesizer",
-            FabricBlockEntityTypeBuilder.create(JadeCauldronEntity::new, CultivationModBlocks.JADE_CAULDRON_BLOCK).build());
+            "jade_cauldron",
+            FabricBlockEntityTypeBuilder.create(JadeCauldronEntity::new, CultivationModBlocks.JADE_CAULDRON).build());
 
 }

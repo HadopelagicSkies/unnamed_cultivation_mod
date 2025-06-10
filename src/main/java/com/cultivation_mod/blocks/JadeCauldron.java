@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class JadeCauldron extends Block implements BlockEntityProvider {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0F, 0.0F, 2.0F, 14.0F, 16.0F, 14.0F);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(3.0F, 0.0F, 3.0F, 13.0F, 16.0F, 13.0F);
 
     public JadeCauldron(Settings settings) {
         super(settings);
@@ -27,50 +27,56 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
 
     @Override
     protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        JadeCauldronEntity blockEntity = (JadeCauldronEntity) world.getBlockEntity(pos);
-        int firstOpenOrMatching = 0;
-        int lastFull = 0;
-        for (int i = 0; i < 8; i++) {
-            if(blockEntity.getStack(i).isEmpty() || blockEntity.getStack(i).isOf(stack.getItem())){
-                firstOpenOrMatching = i;
-                break;
-            }
-        }
-        for (int i = 7; i >= 0; i--) {
-            if(!blockEntity.getStack(i).isEmpty()){
-                lastFull = i;
-                break;
-            }
-        }
+        if (!world.isClient()) {
+            JadeCauldronEntity blockEntity = (JadeCauldronEntity) world.getBlockEntity(pos);
 
-        if(!player.isSneaking()){
-            if(!player.getActiveItem().isEmpty()){
-                int countLeftover = 0;
-                if(blockEntity.getStack(firstOpenOrMatching).isEmpty())
-                    blockEntity.setStack(firstOpenOrMatching, stack.copy());
-                else{
-                    int stackCount = blockEntity.getStack(firstOpenOrMatching).getCount() + stack.getCount();
-                    blockEntity.setStack(firstOpenOrMatching, stack.copyWithCount(Math.min(stackCount,64)));
-                    if(stackCount>64)
-                        countLeftover = stackCount % 64;
+            int firstOpenOrMatching = 0;
+            int lastFull = 0;
+            for (int i = 0; i < 8; i++) {
+                if (blockEntity.getStack(i).isEmpty() || blockEntity.getStack(i).isOf(stack.getItem())) {
+                    firstOpenOrMatching = i;
+                    break;
                 }
+            }
+            for (int i = 7; i >= 0; i--) {
+                if (!blockEntity.getStack(i).isEmpty()) {
+                    lastFull = i;
+                    break;
+                }
+            }
 
-                player.getStackInHand(hand).setCount(countLeftover);
-                blockEntity.markDirty();
-                player.getInventory().markDirty();
-                return ActionResult.SUCCESS;
+            //add in bucket water shit
+
+            if (!player.isSneaking()) {
+                if (!player.getStackInHand(hand).isEmpty()) {
+                    int countLeftover = stack.getCount();
+                    if (blockEntity.getStack(firstOpenOrMatching).isEmpty()) {
+                        blockEntity.setStack(firstOpenOrMatching, stack.copy());
+                        countLeftover = 0;
+                    }
+                    else if(blockEntity.getStack(firstOpenOrMatching).isOf(stack.getItem())){
+                        int stackCount = blockEntity.getStack(firstOpenOrMatching).getCount() + stack.getCount();
+                        blockEntity.setStack(firstOpenOrMatching, stack.copyWithCount(Math.min(stackCount, 64)));
+                        if (stackCount > 64)
+                            countLeftover = stackCount % 64;
+                    }
+
+                    player.getStackInHand(hand).setCount(countLeftover);
+                    blockEntity.markDirty();
+                    player.getInventory().markDirty();
+                    return ActionResult.SUCCESS;
+                }
+            } else {
+                if (player.getActiveItem().isEmpty()) {
+                    player.getInventory().offerOrDrop(blockEntity.getStack(lastFull));
+                    blockEntity.setStack(lastFull, ItemStack.EMPTY);
+                    blockEntity.markDirty();
+                    player.getInventory().markDirty();
+                    return ActionResult.SUCCESS;
+                }
             }
         }
-        else{
-            if(player.getActiveItem().isEmpty()){
-                player.getInventory().offerOrDrop(blockEntity.getStack(lastFull));
-                blockEntity.setStack(lastFull, ItemStack.EMPTY);
-                blockEntity.markDirty();
-                player.getInventory().markDirty();
-                return ActionResult.SUCCESS;
-            }
-        }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return ActionResult.FAIL;
     }
 
     @Override
