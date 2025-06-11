@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
+    "conditional=false": {
       "model": "cultivation_mod:block/jade_cauldron"
+    },
+    "conditional=true": {
+      "model": "cultivation_mod:block/jade_cauldron_full",
+      "tints": [
+        {
+          "type":"minecraft:constant",
+          "value": [0.25, 0.46, 0.89]
+        }
+      ]
     }
   }
 }

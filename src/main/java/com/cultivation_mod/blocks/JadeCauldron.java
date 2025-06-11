@@ -2,27 +2,38 @@ package com.cultivation_mod.blocks;
 
 import com.cultivation_mod.CultivationModBlockEntities;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class JadeCauldron extends Block implements BlockEntityProvider {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(3.0F, 0.0F, 3.0F, 13.0F, 16.0F, 13.0F);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(1.0F, 0.0F, 1.0F, 15.0F, 16.0F, 15.0F);
 
     public JadeCauldron(Settings settings) {
         super(settings);
+        setDefaultState(getDefaultState().with(Properties.CONDITIONAL,false));
     }
 
     @Override
@@ -45,10 +56,37 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
                 }
             }
 
-            //add in bucket water shit
-
             if (!player.isSneaking()) {
-                if (!player.getStackInHand(hand).isEmpty()) {
+                if(player.getStackInHand(hand).isOf(Items.WATER_BUCKET)){
+                    try(Transaction transaction = Transaction.openOuter()) {
+                        long amountInserted = blockEntity.fluidStorage.insert(FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET, transaction);
+                        if (amountInserted == FluidConstants.BUCKET) {
+                            transaction.commit();
+                            world.playSound(null,pos.getX(),pos.getY(),pos.getZ(), SoundEvents.ITEM_BUCKET_FILL, SoundCategory.PLAYERS,1F, MathHelper.nextBetween(player.getWorld().random, 0.8F, 1.2F));
+                            world.setBlockState(pos,state.with(Properties.CONDITIONAL,true));
+
+                            if(!player.isCreative()){
+                                player.getInventory().setStack(player.getInventory().selectedSlot,new ItemStack(Items.BUCKET,1));
+                                player.getInventory().markDirty();
+                            }
+                        }
+                    }
+                } else if(player.getStackInHand(hand).isOf(Items.BUCKET)){
+                    try(Transaction transaction = Transaction.openOuter()) {
+                        long amountExtracted = blockEntity.fluidStorage.extract(FluidVariant.of(Fluids.WATER), FluidConstants.BUCKET, transaction);
+                        if (amountExtracted == FluidConstants.BUCKET) {
+                            transaction.commit();
+                            world.playSound(null,pos.getX(),pos.getY(),pos.getZ(), SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.PLAYERS,1F, MathHelper.nextBetween(player.getWorld().random, 0.8F, 1.2F));
+                            world.setBlockState(pos,state.with(Properties.CONDITIONAL,false));
+
+                            if(!player.isCreative()) {
+                                player.getInventory().setStack(player.getInventory().selectedSlot,stack.copyWithCount(stack.getCount() - 1));
+                                player.getInventory().offerOrDrop(new ItemStack(Items.WATER_BUCKET, 1));
+                                player.getInventory().markDirty();
+                            }
+                        }
+                    }
+                } else if (!player.getStackInHand(hand).isEmpty()) {
                     int countLeftover = stack.getCount();
                     if (blockEntity.getStack(firstOpenOrMatching).isEmpty()) {
                         blockEntity.setStack(firstOpenOrMatching, stack.copy());
@@ -64,7 +102,9 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
                     player.getStackInHand(hand).setCount(countLeftover);
                     blockEntity.markDirty();
                     player.getInventory().markDirty();
-                    return ActionResult.SUCCESS;
+                }
+                else{
+                    blockEntity.setCraftingProgress(0);
                 }
             } else {
                 if (player.getActiveItem().isEmpty()) {
@@ -72,11 +112,15 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
                     blockEntity.setStack(lastFull, ItemStack.EMPTY);
                     blockEntity.markDirty();
                     player.getInventory().markDirty();
-                    return ActionResult.SUCCESS;
                 }
             }
         }
-        return ActionResult.FAIL;
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.CONDITIONAL);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.cultivation_mod;
 
 import com.cultivation_mod.element_setup.AxisElements;
 import com.cultivation_mod.items.AspectedQiItem;
+import com.cultivation_mod.items.QiEfficiencyPill;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -11,6 +12,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -23,6 +25,9 @@ public class CultivationModItems {
             .icon(() -> new ItemStack(CultivationModItems.SPIRIT_HERB_FIRE))
             .displayName(Text.translatable("itemGroup.cultivation_mod"))
             .build();
+
+    public static final TagKey<Item> SPIRIT_HERB = TagKey.of(RegistryKeys.ITEM, Identifier.of(CultivationMod.MOD_ID,"spirit_herb"));
+    public static final TagKey<Item> SPIRIT_STONE = TagKey.of(RegistryKeys.ITEM,Identifier.of(CultivationMod.MOD_ID,"spirit_stone"));
 
     public static void initialize() {
         Registry.register(Registries.ITEM_GROUP, CULTIVATION_MOD_GROUP_KEY, CULTIVATION_MOD_GROUP);
@@ -38,6 +43,7 @@ public class CultivationModItems {
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_AIR);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_EARTH);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_LIGHTNING);
+                    itemGroup.add(CultivationModItems.QI_EFFICIENCY_PILL);
                 });
     }
 
@@ -48,6 +54,11 @@ public class CultivationModItems {
         Item.Settings settings = itemSettings.registryKey(key);
 
         return Registry.register(Registries.ITEM, key, constructor.apply(settings));
+    }
+
+    private static <T extends Item> T addToTag(T item,TagKey<Item> tagKey){
+
+        return item;
     }
 
     private static Item register(Item.Settings itemSettings, String name) {
@@ -94,6 +105,11 @@ public class CultivationModItems {
     public static final AspectedQiItem SPIRIT_STONE_LIGHTNING = register(AspectedQiItem::new,
             new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.LIGHTNING,150)),
             "spirit_stone_lightning"
+    );
+
+    public static final QiEfficiencyPill QI_EFFICIENCY_PILL = register(QiEfficiencyPill::new,
+            new Item.Settings().component(CultivationModComponents.ITEM_QI, 100),
+            "qi_efficiency_pill"
     );
 
 }

@@ -1,0 +1,16 @@
+{
+  "type": "cultivation_mod:alchemy_recipe",
+  "category": "misc",
+  "ingredients": [
+    "cultivation_mod:spirit_herb_fire",
+    "cultivation_mod:spirit_herb_water",
+    "cultivation_mod:spirit_herb_air",
+    "cultivation_mod:spirit_herb_earth",
+    "cultivation_mod:spirit_herb_lightning",
+    "#cultivation_mod:spirit_stone"
+  ],
+  "result": {
+    "count": 1,
+    "id": "cultivation_mod:qi_efficiency_pill"
+  }
+}
