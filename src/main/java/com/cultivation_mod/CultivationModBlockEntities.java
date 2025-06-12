@@ -16,7 +16,7 @@ public class CultivationModBlockEntities {
     }
 
     public static final BlockEntityType<JadeCauldronEntity> JADE_CAULDRON_BLOCK_ENTITY = register(
-            "jade_cauldron",
+            "jade_cauldron.json",
             FabricBlockEntityTypeBuilder.create(JadeCauldronEntity::new, CultivationModBlocks.JADE_CAULDRON).build());
 
 }

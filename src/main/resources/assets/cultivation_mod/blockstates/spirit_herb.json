@@ -1,0 +1,76 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "cultivation_mod/block/spirit_herb_stage0",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=1": {
+      "model": "cultivation_mod/block/spirit_herb_stage0",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=2": {
+      "model": "cultivation_mod/block/spirit_herb_stage1",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=3": {
+      "model": "cultivation_mod/block/spirit_herb_stage1",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=4": {
+      "model": "cultivation_mod/block/spirit_herb_stage2",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=5": {
+      "model": "cultivation_mod/block/spirit_herb_stage2",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=6": {
+      "model": "cultivation_mod/block/spirit_herb_stage3",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    },
+    "age=7": {
+      "model": "cultivation_mod/block/spirit_herb_stage3",
+      "tints": [
+        {
+          "type":"minecraft:map_color",
+          "default": -1
+        }
+      ]
+    }
+  }
+}

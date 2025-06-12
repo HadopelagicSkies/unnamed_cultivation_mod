@@ -1,6 +1,7 @@
 package com.cultivation_mod;
 
 import com.cultivation_mod.blocks.JadeCauldron;
+import com.cultivation_mod.blocks.SpiritHerb;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -9,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
@@ -49,6 +51,11 @@ public class CultivationModBlocks {
     public static final Block JADE_CAULDRON = register(JadeCauldron::new,
             Block.Settings.create(),
             "jade_cauldron"
+    );
+
+    public static final Block SPIRIT_HERB = register(SpiritHerb::new,
+            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP),
+            "spirit_herb"
     );
 
 }

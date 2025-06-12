@@ -38,6 +38,7 @@ public class CultivationModItems {
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_AIR);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_EARTH);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_LIGHTNING);
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_FIRE);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_WATER);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_AIR);
@@ -84,6 +85,11 @@ public class CultivationModItems {
     public static final AspectedQiItem SPIRIT_HERB_LIGHTNING = register(AspectedQiItem::new,
             new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.LIGHTNING,50)),
             "spirit_herb_lightning"
+    );
+
+    public static final Item SPIRIT_HERB_SEEDS = register(Item::new,
+            new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.LIGHTNING,50)),
+            "spirit_herb_seeds"
     );
 
     public static final AspectedQiItem SPIRIT_STONE_FIRE = register(AspectedQiItem::new,
