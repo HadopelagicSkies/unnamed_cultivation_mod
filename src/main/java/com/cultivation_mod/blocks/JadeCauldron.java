@@ -69,6 +69,7 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
                                 player.getInventory().setStack(player.getInventory().selectedSlot,new ItemStack(Items.BUCKET,1));
                                 player.getInventory().markDirty();
                             }
+                            return ActionResult.SUCCESS;
                         }
                     }
                 } else if(player.getStackInHand(hand).isOf(Items.BUCKET)){
@@ -84,6 +85,7 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
                                 player.getInventory().offerOrDrop(new ItemStack(Items.WATER_BUCKET, 1));
                                 player.getInventory().markDirty();
                             }
+                            return ActionResult.SUCCESS;
                         }
                     }
                 } else if (!player.getStackInHand(hand).isEmpty()) {
@@ -98,16 +100,17 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
                         if (stackCount > 64)
                             countLeftover = stackCount % 64;
                     }
-
+                    world.playSound(null,pos.getX(),pos.getY(),pos.getZ(), SoundEvents.BLOCK_DECORATED_POT_INSERT, SoundCategory.PLAYERS,1F, MathHelper.nextBetween(player.getWorld().random, 0.8F, 1.2F));
                     player.getStackInHand(hand).setCount(countLeftover);
                     blockEntity.markDirty();
                     player.getInventory().markDirty();
                 }
-                else{
+                else if(player.getStackInHand(hand).isEmpty()){
                     blockEntity.setCraftingProgress(0);
                 }
             } else {
                 if (player.getActiveItem().isEmpty()) {
+                    world.playSound(null,pos.getX(),pos.getY(),pos.getZ(), SoundEvents.BLOCK_DECORATED_POT_INSERT_FAIL, SoundCategory.PLAYERS,1F, MathHelper.nextBetween(player.getWorld().random, 0.8F, 1.2F));
                     player.getInventory().offerOrDrop(blockEntity.getStack(lastFull));
                     blockEntity.setStack(lastFull, ItemStack.EMPTY);
                     blockEntity.markDirty();

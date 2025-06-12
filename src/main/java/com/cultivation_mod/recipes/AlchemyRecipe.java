@@ -30,19 +30,6 @@ public class AlchemyRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, World world) {
-//        boolean matching=true;
-//        List<Ingredient> coveredIngredients = new ArrayList<>(inputs);
-//        for (int i = 0; i < inputs.size(); i++) {
-//            for(Ingredient ingredient: coveredIngredients){
-//                if(input.getStackInSlot(i) != null && Ingredient.matches(Optional.of(ingredient),input.getStackInSlot(i))){
-//                    coveredIngredients.remove(ingredient);
-//                }
-//                else{
-//                    matching = false;
-//                }
-//            }
-//        }
-//        return matching;
         List<ItemStack> inputItems = new ArrayList<>();
         for (int i = 0; i <input.size();i++)
             inputItems.add(input.getStackInSlot(i));

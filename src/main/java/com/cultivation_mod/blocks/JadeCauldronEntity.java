@@ -1,11 +1,18 @@
 package com.cultivation_mod.blocks;
 
 import com.cultivation_mod.CultivationModBlockEntities;
+import com.cultivation_mod.CultivationModComponents;
+import com.cultivation_mod.FengShuiCalc;
 import com.cultivation_mod.ImplementInventory;
+import com.cultivation_mod.element_setup.AxisElements;
+import com.cultivation_mod.items.AspectedQiItem;
+import com.cultivation_mod.items.UnaspectedQiItem;
 import com.cultivation_mod.recipes.AlchemyRecipe;
+import com.cultivation_mod.recipes.AlchemyRecipeInput;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -21,6 +28,7 @@ import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -28,9 +36,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class JadeCauldronEntity extends BlockEntity implements ImplementInventory, SidedInventory {
     public static BlockEntityTicker<JadeCauldronEntity> jadeCauldronEntityTicker = new JadeCauldronEntityTicker();
@@ -38,7 +44,7 @@ public class JadeCauldronEntity extends BlockEntity implements ImplementInventor
     public JadeCauldronEntity(BlockPos pos, BlockState state) {
         super(CultivationModBlockEntities.JADE_CAULDRON_BLOCK_ENTITY, pos, state);
     }
-    private final int craftTime =200/5;
+    private final int craftTime =200;
     private int craftingProgress = craftTime;
 
     public final DefaultedList<ItemStack> items = DefaultedList.ofSize(8, ItemStack.EMPTY);
@@ -58,11 +64,7 @@ public class JadeCauldronEntity extends BlockEntity implements ImplementInventor
         protected void onFinalCommit() {
             markDirty();
             if (!world.isClient) {
-//                var buf = PacketByteBufs.create();
-//                // Write your data here.
-//                PlayerLookup.tracking(JadeCauldronEntity.this).forEach(player -> {
-//                    ServerPlayNetworking.send(player, CultivationModBlockEntities.JADE_CAULDRON_BLOCK_ENTITY, buf);
-//                });
+
             }
         }
 
@@ -121,21 +123,71 @@ public class JadeCauldronEntity extends BlockEntity implements ImplementInventor
     public void processCrafting(World world, BlockPos pos){
         List<ItemStack> inputItems = new ArrayList<>(this.items);
         inputItems.removeIf(ItemStack::isEmpty);
-        RecipeInput input = CraftingRecipeInput.create(0,0,inputItems);
+        RecipeInput input = AlchemyRecipeInput.create(inputItems);
         if(world.getServer() != null) {
             Optional<RecipeEntry<AlchemyRecipe>> recipeOptional = world.getServer().getRecipeManager().getFirstMatch(AlchemyRecipe.Type.INSTANCE, input, world);
             if(recipeOptional.isPresent()){
                 int minIngredientCount = 65;
-                for(ItemStack item:this.items){
-                    if(minIngredientCount < item.getCount())
+                for(ItemStack item:inputItems){
+                    if(minIngredientCount > item.getCount() )
                         minIngredientCount = item.getCount();
                 }
                 AlchemyRecipe recipe = recipeOptional.get().value();
+                int outputCount = recipe.getOutput().getCount();
+                double fengShuiScore = FengShuiCalc.calculateFengShui(world, pos);
+                // modify output count here
+                outputCount += (int) (fengShuiScore / 1200);
+
+
+                double qiComponentEfficiency = 0.5+ (fengShuiScore/ 1200);
                 for (int i = 0; i < minIngredientCount; i++) {
-                    int outputCount = 1;
-                    ItemStack outputStack = recipe.craft(input, null).copyWithCount(outputCount);
+                    ItemStack outputStack = recipe.craft(input,null).copyWithCount(outputCount);
+
+                    if(outputStack.getItem() instanceof AspectedQiItem){
+                        List<AxisElements> presentElements= new ArrayList<>();
+                        for(ItemStack elementItem : inputItems) {
+                            if (elementItem.get(CultivationModComponents.ITEM_ELEMENTS) != null) {
+                                elementItem.get(CultivationModComponents.ITEM_ELEMENTS).forEach((element, integer) -> presentElements.add(element));
+                            }
+                        }
+                        Map<AxisElements, Integer> elementTotals = new HashMap<>();
+                        for(ItemStack item : inputItems){
+                            if(item.get(CultivationModComponents.ITEM_QI) != null){
+                                presentElements.forEach((element) -> elementTotals.put(element,elementTotals.get(element) + (int) ((double) item.get(CultivationModComponents.ITEM_QI) / presentElements.size() *qiComponentEfficiency)));
+                            }else if(item.get(CultivationModComponents.ITEM_ELEMENTS) != null){
+                                item.get(CultivationModComponents.ITEM_ELEMENTS).forEach((element,integer) -> elementTotals.put(element, elementTotals.get(element) + (int) (integer*qiComponentEfficiency)));
+                            }
+                        }
+                        outputStack.set(CultivationModComponents.ITEM_ELEMENTS,elementTotals);
+                    }else if(outputStack.getItem() instanceof UnaspectedQiItem) {
+                        int qiTotal = outputStack.get(CultivationModComponents.ITEM_QI).intValue();
+                        for(ItemStack item : inputItems) {
+                            if (item.get(CultivationModComponents.ITEM_QI) != null) {
+                                qiTotal += item.get(CultivationModComponents.ITEM_QI);
+                            } else if (item.get(CultivationModComponents.ITEM_ELEMENTS) != null) {
+                                for(int elements: item.get(CultivationModComponents.ITEM_ELEMENTS).values())
+                                    qiTotal += elements;
+                            }
+                        }
+                        outputStack.set(CultivationModComponents.ITEM_QI,(int)(qiTotal*qiComponentEfficiency));
+                    }
+                    // Further modify output components here
+
+
+
+
                     world.spawnEntity(new ItemEntity(world,pos.getX(),pos.getY()+1,pos.getZ(),outputStack));
                 }
+
+                for(ItemStack item: this.items){
+                    item.decrement(minIngredientCount);
+                }
+                try(Transaction transaction = Transaction.openOuter()) {
+                    fluidStorage.extract(fluidStorage.variant, fluidStorage.getAmount(), transaction);
+                    world.setBlockState(pos,world.getBlockState(pos).with(Properties.CONDITIONAL,false));
+                    transaction.commit();
+                }
+                this.markDirty();
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 2F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
             }
             else
@@ -152,7 +204,7 @@ public class JadeCauldronEntity extends BlockEntity implements ImplementInventor
                 if (progress < blockEntity.craftTime && blockEntity.fluidStorage.getAmount() >= blockEntity.fluidStorage.getCapacity()) {
                     blockEntity.setCraftingProgress(progress + 1);
                     if (progress % 20 == 0) {
-                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.BLOCKS, 2F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
+                        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_STEP, SoundCategory.BLOCKS, 2F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
                     }
                 } else if (progress == blockEntity.craftTime && blockEntity.fluidStorage.getAmount() >= blockEntity.fluidStorage.getCapacity()) {
                     blockEntity.processCrafting(world,pos);
