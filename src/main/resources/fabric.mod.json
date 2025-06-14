@@ -22,7 +22,7 @@
 			"com.cultivation_mod.CultivationModClient"
 		],
 		"fabric-datagen": [
-			"com.cultivation_mod.CultivationModDataGenerator"
+			"com.cultivation_mod.datagen.CultivationModDataGenerator"
 		]
 	},
 	"mixins": [
