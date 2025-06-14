@@ -11,5 +11,17 @@
 
   "item.cultivation_mod.unaspected_item.info": "Stored Qi: %1$s",
   "item.cultivation_mod.aspected_item.info": "Total Qi: %1$s",
-  "item.cultivation_mod.aspected_item.info2": "%1$s Qi: %2$s"
+  "item.cultivation_mod.aspected_item.info2": "%1$s Qi: %2$s",
+
+  "item.cultivation_mod.spirit_herb_fire": "Spirit Herb Materials: Fire",
+  "item.cultivation_mod.spirit_herb_water": "Spirit Herb Materials: Water",
+  "item.cultivation_mod.spirit_herb_air": "Spirit Herb Materials: Air",
+  "item.cultivation_mod.spirit_herb_earth": "Spirit Herb Materials: Earth",
+  "item.cultivation_mod.spirit_herb_lightning": "Spirit Herb Materials: Lightning",
+
+  "item.cultivation_mod.spirit_stone_fire": "Spirit Stone: Fire",
+  "item.cultivation_mod.spirit_stone_water": "Spirit Stone: Water",
+  "item.cultivation_mod.spirit_stone_air": "Spirit Stone: Air",
+  "item.cultivation_mod.spirit_stone_earth": "Spirit Stone: Earth",
+  "item.cultivation_mod.spirit_stone_lightning": "Spirit Stone: Lightning"
 }
