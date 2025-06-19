@@ -2,13 +2,11 @@ package com.cultivation_mod.blocks;
 
 import com.cultivation_mod.CultivationModBlocks;
 import com.cultivation_mod.CultivationModItems;
-import com.cultivation_mod.CultivationModTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -20,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class SpiritHerb extends CropBlock {
     public SpiritHerb(Settings settings) {
         super(settings.mapColor(MapColor.RED));
-        this.setDefaultState(getDefaultState().with(CultivationModBlocks.LOCAL_ELEMENT,0).with(Properties.AGE_7,0));
+            this.setDefaultState(getDefaultState().with(CultivationModBlocks.LOCAL_ELEMENT,0).with(CultivationModBlocks.LOCAL_QI,0).with(Properties.AGE_7,0));
     }
 
     @Override
@@ -31,7 +29,8 @@ public class SpiritHerb extends CropBlock {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         int localElement=0; //feed pos into some function for local
-        world.setBlockState(pos,state.with(CultivationModBlocks.LOCAL_ELEMENT,localElement));
+        int localQi=400; //feed pos into some function for local
+        world.setBlockState(pos,state.with(CultivationModBlocks.LOCAL_ELEMENT,localElement).with(CultivationModBlocks.LOCAL_QI,localQi));
         switch (localElement){
             case 0 -> this.settings.mapColor(MapColor.RED);
             case 1 -> this.settings.mapColor(MapColor.BLUE);
@@ -39,7 +38,6 @@ public class SpiritHerb extends CropBlock {
             case 3 -> this.settings.mapColor(MapColor.YELLOW);
             case 4 -> this.settings.mapColor(MapColor.PALE_PURPLE);
         };
-
         super.onPlaced(world, pos, state, placer, itemStack);
     }
 
@@ -52,10 +50,6 @@ public class SpiritHerb extends CropBlock {
     @Override
     protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return AGE_TO_SHAPE[getAge(state)];
-    }
-
-    public static void handleColors(){
-
     }
 
     @Override
@@ -73,6 +67,7 @@ public class SpiritHerb extends CropBlock {
             Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
             Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)
     };
+
 
 
 }

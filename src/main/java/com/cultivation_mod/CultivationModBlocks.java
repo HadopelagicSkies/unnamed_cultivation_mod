@@ -18,6 +18,7 @@ import java.util.function.Function;
 
 public class CultivationModBlocks {
     public static final IntProperty LOCAL_ELEMENT = IntProperty.of("local_element",0,4) ;
+    public static final IntProperty LOCAL_QI = IntProperty.of("local_qi",0,500) ;
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(CultivationModItems.CULTIVATION_MOD_GROUP_KEY).register((itemGroup) ->
         {

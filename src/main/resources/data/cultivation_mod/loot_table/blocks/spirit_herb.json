@@ -24,6 +24,17 @@
                   }
                 }
               ],
+              "functions": [
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:binomial_with_bonus_count",
+                  "function": "minecraft:apply_bonus",
+                  "parameters": {
+                    "extra": 3,
+                    "probability": 0.5714286
+                  }
+                }
+              ],
               "name": "cultivation_mod:spirit_herb_fire"
             },
             {
@@ -35,6 +46,17 @@
                   "properties": {
                     "age": "7",
                     "local_element": "1"
+                  }
+                }
+              ],
+              "functions": [
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:binomial_with_bonus_count",
+                  "function": "minecraft:apply_bonus",
+                  "parameters": {
+                    "extra": 3,
+                    "probability": 0.5714286
                   }
                 }
               ],
@@ -52,6 +74,17 @@
                   }
                 }
               ],
+              "functions": [
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:binomial_with_bonus_count",
+                  "function": "minecraft:apply_bonus",
+                  "parameters": {
+                    "extra": 3,
+                    "probability": 0.5714286
+                  }
+                }
+              ],
               "name": "cultivation_mod:spirit_herb_air"
             },
             {
@@ -63,6 +96,17 @@
                   "properties": {
                     "age": "7",
                     "local_element": "3"
+                  }
+                }
+              ],
+              "functions": [
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:binomial_with_bonus_count",
+                  "function": "minecraft:apply_bonus",
+                  "parameters": {
+                    "extra": 3,
+                    "probability": 0.5714286
                   }
                 }
               ],
@@ -80,10 +124,32 @@
                   }
                 }
               ],
+              "functions": [
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:binomial_with_bonus_count",
+                  "function": "minecraft:apply_bonus",
+                  "parameters": {
+                    "extra": 3,
+                    "probability": 0.5714286
+                  }
+                }
+              ],
               "name": "cultivation_mod:spirit_herb_lightning"
             },
             {
               "type": "minecraft:item",
+              "functions": [
+                {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:binomial_with_bonus_count",
+                  "function": "minecraft:apply_bonus",
+                  "parameters": {
+                    "extra": 3,
+                    "probability": 0.5714286
+                  }
+                }
+              ]
               "name": "cultivation_mod:spirit_herb_seeds"
             }
           ]
