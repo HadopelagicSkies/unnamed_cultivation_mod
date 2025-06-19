@@ -40,7 +40,6 @@ public class JadeCauldron extends Block implements BlockEntityProvider {
     protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient()) {
             JadeCauldronEntity blockEntity = (JadeCauldronEntity) world.getBlockEntity(pos);
-
             int firstOpenOrMatching = 0;
             int lastFull = 0;
             for (int i = 0; i < 8; i++) {

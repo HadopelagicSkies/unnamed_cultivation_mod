@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/crop",
   "textures": {
-    "crop": "cultivation_mod:block/spirit_herb_stage0"
+    "crop": "cultivation_mod:block/spirit_herb_stage0",
+    "tintindex": 0
   }
 }

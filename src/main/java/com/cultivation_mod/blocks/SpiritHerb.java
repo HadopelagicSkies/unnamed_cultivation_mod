@@ -1,10 +1,13 @@
 package com.cultivation_mod.blocks;
 
+import com.cultivation_mod.CultivationModBlocks;
 import com.cultivation_mod.CultivationModItems;
+import com.cultivation_mod.CultivationModTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -15,10 +18,9 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 public class SpiritHerb extends CropBlock {
-    //public final IntProperty LOCAL_ELEMENT = IntProperty.of("local_element",0,4) ;
     public SpiritHerb(Settings settings) {
-        super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().mapColor(MapColor.RED));
+        super(settings.mapColor(MapColor.RED));
+        this.setDefaultState(getDefaultState().with(CultivationModBlocks.LOCAL_ELEMENT,0).with(Properties.AGE_7,0));
     }
 
     @Override
@@ -29,7 +31,15 @@ public class SpiritHerb extends CropBlock {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         int localElement=0; //feed pos into some function for local
-        //world.setBlockState(pos,state.with(LOCAL_ELEMENT,localElement));
+        world.setBlockState(pos,state.with(CultivationModBlocks.LOCAL_ELEMENT,localElement));
+        switch (localElement){
+            case 0 -> this.settings.mapColor(MapColor.RED);
+            case 1 -> this.settings.mapColor(MapColor.BLUE);
+            case 2 -> this.settings.mapColor(MapColor.PALE_GREEN);
+            case 3 -> this.settings.mapColor(MapColor.YELLOW);
+            case 4 -> this.settings.mapColor(MapColor.PALE_PURPLE);
+        };
+
         super.onPlaced(world, pos, state, placer, itemStack);
     }
 
@@ -46,6 +56,12 @@ public class SpiritHerb extends CropBlock {
 
     public static void handleColors(){
 
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(CultivationModBlocks.LOCAL_ELEMENT);
+        builder.add(Properties.AGE_7);
     }
 
     private static final VoxelShape[] AGE_TO_SHAPE = new VoxelShape[]{Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),

@@ -29,6 +29,8 @@ public class CultivationMod implements ModInitializer {
 		CultivationModBlocks.initialize();
 		CultivationModBlockEntities.initialize();
 		CultivationModComponents.initialize();
+		CultivationModTags.initialize();
+
 
 		Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, AlchemyRecipeSerializer.ID), AlchemyRecipeSerializer.INSTANCE);
 		Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, AlchemyRecipe.Type.ID), AlchemyRecipe.Type.INSTANCE);

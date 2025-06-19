@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:jagged_peaks",
+    "minecraft:stony_peaks",
+    "minecraft:windswept_savanna",
+    "minecraft:ice_spikes",
+    "minecraft:deep_dark",
+    "minecraft:the_void",
+    "minecraft:the_end",
+    "minecraft:small_end_islands",
+    "minecraft:end_midlands",
+    "minecraft:end_highlands",
+    "minecraft:end_barrens"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "values": [
+    "minecraft:warm_ocean",
+    "minecraft:cherry_grove",
+    "minecraft:meadow",
+    "minecraft:mushroom_fields",
+    "minecraft:flower_forest",
+    "minecraft:bamboo_jungle",
+    "minecraft:mangrove_swamp",
+    "minecraft:sunflower_plains",
+    "minecraft:wooded_badlands",
+    "minecraft:lush_caves",
+    "minecraft:warped_forest",
+    "minecraft:the_void",
+    "minecraft:the_end",
+    "minecraft:small_end_islands",
+    "minecraft:end_midlands",
+    "minecraft:end_highlands",
+    "minecraft:end_barrens"
+  ]
+}

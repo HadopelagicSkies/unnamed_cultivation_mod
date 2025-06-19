@@ -11,17 +11,20 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
 public class CultivationModBlocks {
+    public static final IntProperty LOCAL_ELEMENT = IntProperty.of("local_element",0,4) ;
     public static void initialize() {
         ItemGroupEvents.modifyEntriesEvent(CultivationModItems.CULTIVATION_MOD_GROUP_KEY).register((itemGroup) ->
         {
             itemGroup.add(CultivationModBlocks.JADE_BLOCK.asItem());
             itemGroup.add(CultivationModBlocks.JADE_CAULDRON.asItem());
         });
+
     }
 
     public static <T extends Block> T register(Function<Block.Settings, T> constructor, Block.Settings blockSettings, String name) {
@@ -48,12 +51,12 @@ public class CultivationModBlocks {
             "jade_block"
     );
 
-    public static final Block JADE_CAULDRON = register(JadeCauldron::new,
+    public static final JadeCauldron JADE_CAULDRON = register(JadeCauldron::new,
             Block.Settings.create(),
             "jade_cauldron"
     );
 
-    public static final Block SPIRIT_HERB = register(SpiritHerb::new,
+    public static final SpiritHerb SPIRIT_HERB = register(SpiritHerb::new,
             Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP),
             "spirit_herb"
     );
