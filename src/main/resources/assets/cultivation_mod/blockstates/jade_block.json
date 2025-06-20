@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "cultivation_mod:block/jade_block"
-    }
+    "": [
+      {
+        "model": "cultivation_mod:block/jade_block"
+      },
+      {
+        "model": "cultivation_mod:block/jade_block_mirrored"
+      },
+      {
+        "model": "cultivation_mod:block/jade_block",
+        "y": 180
+      },
+      {
+        "model": "cultivation_mod:block/jade_block_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

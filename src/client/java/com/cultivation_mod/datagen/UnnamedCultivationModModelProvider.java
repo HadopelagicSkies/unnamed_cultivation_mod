@@ -24,6 +24,7 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_AIR, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_EARTH, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_LIGHTNING, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS, Models.GENERATED);
 
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_FIRE, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_WATER, Models.GENERATED);
