@@ -574,7 +574,7 @@ public class CultivationScreen extends Screen {
             else
                 meridianPathTracker.add("AR"+newState);
 
-            intersectionDirectionButtons.get(meridianPathTracker.get(meridianPathTracker.size()-2)).visible = false;
+            intersectionDirectionButtons.get(meridianPathTracker.get(meridianPathTracker.size()-2).stripTrailing()).visible = false;
         })));
 
         // top of heart
@@ -609,7 +609,7 @@ public class CultivationScreen extends Screen {
             else
                 meridianPathTracker.add("HE"+newState);
 
-            intersectionDirectionButtons.get(meridianPathTracker.get(meridianPathTracker.size()-2)).visible = false;
+            intersectionDirectionButtons.get(meridianPathTracker.get(meridianPathTracker.size()-2).stripTrailing()).visible = false;
         })));
 
         // left side of heart
@@ -681,7 +681,7 @@ public class CultivationScreen extends Screen {
             else
                 meridianPathTracker.add("AL"+newState);
 
-            intersectionDirectionButtons.get(meridianPathTracker.get(meridianPathTracker.size()-2)).visible = false;
+            intersectionDirectionButtons.get(meridianPathTracker.get(meridianPathTracker.size()-2).stripTrailing()).visible = false;
         })));
 
 
