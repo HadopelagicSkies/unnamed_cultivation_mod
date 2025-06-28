@@ -103,6 +103,7 @@ public class CultivationScreen extends Screen {
         PlayerCultivationAttatchments.getMeridianProgress(this.player).forEach((meridian,progress) ->{
             meridianDirections.put(meridian,0);
         });
+        meridianDirections.put("dantian",0);
     }
 
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
@@ -386,180 +387,183 @@ public class CultivationScreen extends Screen {
         rotationDirectionButtons.add(0,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l - (routingButtonSize/2), 0, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
-            if(newState == 3)
-                newState =0;
+            if (newState == 3)
+                newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if(newState!=0) {
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "stomach") < 100) {
-                    rotationDirectionButtons.get(1).visible = true;
-                }
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "gut") < 100) {
-                    rotationDirectionButtons.get(8).visible = true;
-                }
-            } else{
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "stomach") >= 100) {
+                rotationDirectionButtons.get(1).visible = true;
+            } else {
                 rotationDirectionButtons.get(1).visible = false;
+            }
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "gut") >= 100) {
+                rotationDirectionButtons.get(8).visible = true;
+            }else {
                 rotationDirectionButtons.get(8).visible = false;
             }
 
-            meridianPathTracker.add(0,"D"+newState);
+            meridianDirections.put("dantian", newState == 2 ? -1 : newState);
+            meridianPathTracker.add(0, "D" + newState);
         })));
         rotationDirectionButtons.get(0).visible = true;
 
         //stomach
-        rotationDirectionButtons.add(1,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 1, (button) -> {
+        rotationDirectionButtons.add(1,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-15 - (routingButtonSize/2), 1, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if(newState!=0) {
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "heart") < 100) {
-                    rotationDirectionButtons.get(2).visible = true;
-                }
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "heart") >= 100) {
+                rotationDirectionButtons.get(2).visible = true;
             } else{
                 rotationDirectionButtons.get(2).visible = false;
             }
+            meridianDirections.put("stomach",newState == 2 ? -1:newState);
             meridianPathTracker.add(1,"ST"+newState);
         })));
 
         //heart
-        rotationDirectionButtons.add(2,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 2, (button) -> {
+        rotationDirectionButtons.add(2,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-34 - (routingButtonSize/2), 2, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
-            if(newState == 3)
-                newState =0;
+            if (newState == 3)
+                newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if(newState!=0) {
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "shoulderL") < 100) {
-                    rotationDirectionButtons.get(3).visible = true;
-                }
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "shoulderR") < 100) {
-                    rotationDirectionButtons.get(4).visible = true;
-                }
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "head") < 100) {
-                    rotationDirectionButtons.get(7).visible = true;
-                }
-            } else{
+
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "shoulderL") >= 100) {
+                rotationDirectionButtons.get(3).visible = true;
+            } else {
                 rotationDirectionButtons.get(3).visible = false;
+            }
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "shoulderR") >= 100) {
+                rotationDirectionButtons.get(4).visible = true;
+            } else {
                 rotationDirectionButtons.get(4).visible = false;
+            }
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "head") >= 100) {
+                rotationDirectionButtons.get(7).visible = true;
+            } else {
                 rotationDirectionButtons.get(7).visible = false;
             }
-            meridianPathTracker.add(2,"HR"+newState);
+
+            meridianDirections.put("heart", newState == 2 ? -1 : newState);
+            meridianPathTracker.add(2, "HR" + newState);
         })));
 
         //shoulderL
-        rotationDirectionButtons.add(3,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 3, (button) -> {
+        rotationDirectionButtons.add(3,this.addDrawableChild(new RotationDirectionButton(k - 15 - (routingButtonSize/2), l-32 - (routingButtonSize/2), 3, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
-            if(newState == 3)
-                newState =0;
+            if (newState == 3)
+                newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if(newState!=0) {
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "armL") < 100) {
-                    rotationDirectionButtons.get(5).visible = true;
-                }
-            } else{
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "armL") >= 100) {
+                rotationDirectionButtons.get(5).visible = true;
+
+            } else {
                 rotationDirectionButtons.get(5).visible = false;
             }
-            meridianPathTracker.add(3,"SL"+newState);
+            meridianDirections.put("shoulderL", newState == 2 ? -1 : newState);
+            meridianPathTracker.add(3, "SL" + newState);
         })));
 
         //shoulderR
-        rotationDirectionButtons.add(4,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 4, (button) -> {
+        rotationDirectionButtons.add(4,this.addDrawableChild(new RotationDirectionButton(k + 15 - (routingButtonSize/2), l-32 - (routingButtonSize/2), 4, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
-            if(newState == 3)
-                newState =0;
+            if (newState == 3)
+                newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if(newState!=0) {
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "armR") < 100) {
-                    rotationDirectionButtons.get(6).visible = true;
-                }
-            } else{
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "armR") >= 100) {
+                rotationDirectionButtons.get(6).visible = true;
+
+            } else {
                 rotationDirectionButtons.get(6).visible = false;
             }
-            meridianPathTracker.add(4,"SR"+newState);
+            meridianDirections.put("shoulderR", newState == 2 ? -1 : newState);
+            meridianPathTracker.add(4, "SR" + newState);
         })));
 
         //armL
-        rotationDirectionButtons.add(5,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 5, (button) -> {
+        rotationDirectionButtons.add(5,this.addDrawableChild(new RotationDirectionButton(k -39 - (routingButtonSize/2), l-15 - (routingButtonSize/2), 5, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
-
+            meridianDirections.put("armL",newState == 2 ? -1:newState);
             meridianPathTracker.add(5,"AL"+newState);
         })));
 
         //armR
-        rotationDirectionButtons.add(6,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 6, (button) -> {
+        rotationDirectionButtons.add(6,this.addDrawableChild(new RotationDirectionButton(k + 39 - (routingButtonSize/2), l-15 - (routingButtonSize/2), 6, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
-
+            meridianDirections.put("armR",newState == 2 ? -1:newState);
             meridianPathTracker.add(6,"AR"+newState);
         })));
 
         //head
-        rotationDirectionButtons.add(7,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 7, (button) -> {
+        rotationDirectionButtons.add(7,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-59 - (routingButtonSize/2), 7, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
-
+            meridianDirections.put("head",newState == 2 ? -1:newState);
             meridianPathTracker.add(7,"HE"+newState);
         })));
 
         //gut
-        rotationDirectionButtons.add(8,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 8, (button) -> {
+        rotationDirectionButtons.add(8,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l+10 - (routingButtonSize/2), 8, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
-            if(newState == 3)
-                newState =0;
+            if (newState == 3)
+                newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if(newState!=0) {
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "legL") < 100) {
-                    rotationDirectionButtons.get(9).visible = true;
-                }
-                if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "legR") < 100) {
-                    rotationDirectionButtons.get(10).visible = true;
-                }
-            } else{
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "legL") >= 100) {
+                rotationDirectionButtons.get(9).visible = true;
+            } else {
                 rotationDirectionButtons.get(9).visible = false;
+            }
+            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "legR") >= 100) {
+                rotationDirectionButtons.get(10).visible = true;
+            } else {
                 rotationDirectionButtons.get(10).visible = false;
             }
-            meridianPathTracker.add(8,"G"+newState);
+
+            meridianDirections.put("gut", newState == 2 ? -1 : newState);
+            meridianPathTracker.add(8, "G" + newState);
         })));
 
         //legL
-        rotationDirectionButtons.add(9,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 9, (button) -> {
+        rotationDirectionButtons.add(9,this.addDrawableChild(new RotationDirectionButton(k -27 - (routingButtonSize/2), l+25 - (routingButtonSize/2), 9, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
-
+            meridianDirections.put("legL",newState == 2 ? -1:newState);
             meridianPathTracker.add(9,"LL"+newState);
         })));
 
         //legR
-        rotationDirectionButtons.add(10,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l-25 - (routingButtonSize/2), 10, (button) -> {
+        rotationDirectionButtons.add(10,this.addDrawableChild(new RotationDirectionButton(k +27- (routingButtonSize/2), l+25 - (routingButtonSize/2), 10, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
-
+            meridianDirections.put("legR",newState == 2 ? -1:newState);
             meridianPathTracker.add(10,"LR"+newState);
         })));
     }
@@ -593,10 +597,10 @@ public class CultivationScreen extends Screen {
 
         @Override
         protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-//            context.getMatrices().push();
-//            context.getMatrices().translate(0,0,10);
+            context.getMatrices().push();
+            context.getMatrices().translate(0,0,10);
             super.renderWidget(context, mouseX, mouseY, delta);
-//            context.getMatrices().pop();
+            context.getMatrices().pop();
         }
 
         public int getState() {
