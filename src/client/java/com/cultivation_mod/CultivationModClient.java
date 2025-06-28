@@ -21,8 +21,10 @@ import org.lwjgl.glfw.GLFW;
 
 public class CultivationModClient implements ClientModInitializer {
 	private static KeyBinding cultivationMenuKeybindings;
-	private static final BlockColorProvider CAULDRON_COLOR = (state, renderView, pos, index) -> renderView != null && pos != null ? BiomeColors.getWaterColor(renderView, pos) : -1;
-	private static final BlockColorProvider SPIRIT_HERB_COLOR = (state, renderView, pos, index) -> renderView != null && pos != null ? state.getMapColor(renderView,pos).color : -1;
+	private static final BlockColorProvider CAULDRON_COLOR = (state, renderView, pos, index) ->
+			renderView != null && pos != null ? BiomeColors.getWaterColor(renderView, pos) : -1;
+	private static final BlockColorProvider SPIRIT_HERB_COLOR = (state, renderView, pos, index) ->
+			renderView != null && pos != null ? state.getMapColor(renderView,pos).color : -1;
 
 
 	@Override
