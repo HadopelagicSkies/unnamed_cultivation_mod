@@ -5,6 +5,7 @@ import com.cultivation_mod.element_setup.PlayerElementAttachments;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 public class CultivationScreen extends Screen {
     private final PlayerEntity player;
+    private final int playerTier;
     private final int titleX;
     private final int titleY;
     private final int backgroundWidth;
@@ -31,7 +33,11 @@ public class CultivationScreen extends Screen {
     private float mouseY;
     private int framesOpen;
 
-    private static final int routingButtonSize=9;
+    private static final int routingButtonSize=15;
+
+    private static final Identifier CW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/cw_button_icon.png");
+    private static final Identifier CCW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/ccw_button_icon.png");
+    private static final Identifier QM_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/qm_button_icon.png");
 
     private static final Identifier BACKGROUND_TEXTURE = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/cultivation_screen.png");
     private static final Identifier MERIDIANS = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/meridians.png");
@@ -91,11 +97,12 @@ public class CultivationScreen extends Screen {
     private List<RotationDirectionButton> rotationDirectionButtons = new ArrayList<>();
 
     private Map<String, Integer> meridianDirections = new HashMap<>();
-    private List<String> meridianPathTracker = new ArrayList<>(List.of("D0", "ST0", "HR0", "SL0", "SR0", "AL0", "AR0", "HE0", "G0", "LL0", "LR0"));
+    private List<String> meridianPathTracker = new ArrayList<>(List.of("0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"));
 
     protected CultivationScreen(PlayerEntity player) {
         super(Text.translatable("gui.cultivation_mod.cultivation_screen"));
         this.player = player;
+        this.playerTier = PlayerCultivationAttatchments.getRealm(player);
         this.titleX = 10;
         this.titleY = 10;
         this.backgroundWidth = 276;
@@ -124,12 +131,35 @@ public class CultivationScreen extends Screen {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
         context.drawText(textRenderer,this.title,i + titleX, j + titleY, Colors.BLACK,false);
-        context.drawTexture(RenderLayer::getGuiTextured, MERIDIANS, i+93, j+27, 0.0F, 0.0F, 91, 113, 91, 113,ColorHelper.getArgb(0,104,178));
-        drawMeridianDirection(context);
-        drawMeridianClearing(context);
-        context.drawTexture(RenderLayer::getGuiTextured, DANTIAN, i+130, j+92, 0.0F, 0.0F, 17, 17, 17, 17);
+
+        if(playerTier >= 0) {
+            context.drawTexture(RenderLayer::getGuiTextured, MERIDIANS, i + 93, j + 27, 0.0F, 0.0F, 91, 113, 91, 113, ColorHelper.getArgb(0, 104, 178));
+            drawMeridianDirection(context);
+            drawMeridianClearing(context);
+            context.drawTexture(RenderLayer::getGuiTextured, DANTIAN, i + 130, j + 92, 0.0F, 0.0F, 17, 17, 17, 17);
+        }
+        drawButtonIcons(context);
 
         this.framesOpen++;
+    }
+
+    private void drawButtonIcons(DrawContext context){
+        for(RotationDirectionButton button:this.rotationDirectionButtons){
+            int x = button.getX();
+            int y = button.getY();
+
+            if (button.visible) {
+                context.getMatrices().push();
+                context.getMatrices().translate(0,0,20);
+                if(button.state == 1)
+                    context.drawTexture(RenderLayer::getGuiTextured, CW_BUTTON_ICON, x, y, 0.0F, 0.0F, 15, 15, 15, 15);
+                else if(button.state == 2)
+                    context.drawTexture(RenderLayer::getGuiTextured, CCW_BUTTON_ICON, x, y, 0.0F, 0.0F, 15, 15, 15, 15);
+                else
+                    context.drawTexture(RenderLayer::getGuiTextured, QM_BUTTON_ICON, x, y, 0.0F, 0.0F, 15, 15, 15, 15);
+                context.getMatrices().pop();
+            }
+        }
     }
 
     private void drawMeridianDirection(DrawContext context) {
@@ -228,14 +258,14 @@ public class CultivationScreen extends Screen {
                 case ("shoulderR") -> {
                     if(direction!=0) {
                         if (frameTime <= frequency/3) {
-                            if(direction==-1)
+                            if(direction==1)
                                 context.drawTexture(RenderLayer::getGuiTextured, SHOULDERR1, i+143, j+61, 0.0F, 0.0F, 20, 14, 20, 14);
                             else
                                 context.drawTexture(RenderLayer::getGuiTextured, SHOULDERR3, i+143, j+61, 0.0F, 0.0F, 20, 14, 20, 14);
                         } else if (frameTime <= 2*frequency/3) {
                             context.drawTexture(RenderLayer::getGuiTextured, SHOULDERR2, i+143, j+61, 0.0F, 0.0F, 20, 14, 20, 14);
                         } else {
-                            if(direction==-1)
+                            if(direction==1)
                                 context.drawTexture(RenderLayer::getGuiTextured, SHOULDERR3, i+143, j+61, 0.0F, 0.0F, 20, 14, 20, 14);
                             else
                                 context.drawTexture(RenderLayer::getGuiTextured, SHOULDERR1, i+143, j+61, 0.0F, 0.0F, 20, 14, 20, 14);
@@ -245,14 +275,14 @@ public class CultivationScreen extends Screen {
                 case ("armL") -> {
                     if(direction!=0) {
                         if (frameTime <= frequency/3) {
-                            if(direction==-1)
+                            if(direction==1)
                                 context.drawTexture(RenderLayer::getGuiTextured, ARML1, i+92, j+69, 0.0F, 0.0F, 31, 33, 31, 33);
                             else
                                 context.drawTexture(RenderLayer::getGuiTextured, ARML3, i+92, j+69, 0.0F, 0.0F, 31, 33, 31, 33);
                         } else if (frameTime <= 2*frequency/3) {
                             context.drawTexture(RenderLayer::getGuiTextured, ARML2, i+92, j+69, 0.0F, 0.0F, 31, 33, 31, 33);
                         } else {
-                            if(direction==-1)
+                            if(direction==1)
                                 context.drawTexture(RenderLayer::getGuiTextured, ARML3, i+92, j+69, 0.0F, 0.0F, 31, 33, 31, 33);
                             else
                                 context.drawTexture(RenderLayer::getGuiTextured, ARML1, i+92, j+69, 0.0F, 0.0F, 31, 33, 31, 33);
@@ -282,7 +312,7 @@ public class CultivationScreen extends Screen {
                             if(direction==-1)
                                 context.drawTexture(RenderLayer::getGuiTextured, LEGL1, i+104, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
                             else
-                                context.drawTexture(RenderLayer::getGuiTextured, LEGL3, i+104, j+109, 0.0F, 0.0F, 27, 30, 27, 305);
+                                context.drawTexture(RenderLayer::getGuiTextured, LEGL3, i+104, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
                         } else if (frameTime <= 2*frequency/3) {
                             context.drawTexture(RenderLayer::getGuiTextured, LEGL2, i+104, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
                         } else {
@@ -295,15 +325,15 @@ public class CultivationScreen extends Screen {
                 }
                 case ("legR") -> {
                     if(direction!=0) {
-                        if (frameTime == frequency/3) {
-                            if(direction==-1)
+                        if (frameTime <= frequency/3) {
+                            if(direction==1)
                                 context.drawTexture(RenderLayer::getGuiTextured, LEGR1, i+144, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
                             else
                                 context.drawTexture(RenderLayer::getGuiTextured, LEGR3, i+144, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
-                        } else if (frameTime == 2*frequency/3) {
+                        } else if (frameTime <= 2*frequency/3) {
                             context.drawTexture(RenderLayer::getGuiTextured, LEGR2, i+144, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
-                        } else if (frameTime == frequency) {
-                            if(direction==-1)
+                        } else {
+                            if(direction==1)
                                 context.drawTexture(RenderLayer::getGuiTextured, LEGR3, i+144, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
                             else
                                 context.drawTexture(RenderLayer::getGuiTextured, LEGR1, i+144, j+109, 0.0F, 0.0F, 27, 30, 27, 30);
@@ -376,11 +406,14 @@ public class CultivationScreen extends Screen {
         int l = j+100; // dantian y center
 
         this.acceptCultivationButton = this.addDrawableChild(new AcceptCultivationButton(i + 70, j+169, 11, (button) -> {
-            Map<String, Integer> meridianMap = PlayerCultivationAttatchments.getMeridianProgress(this.player);
-            meridianMap.forEach((meridian,progress) ->{
-                PlayerCultivationAttatchments.setSpecificMeridianProgress(this.player,meridian,100);
-                CultivationMod.LOGGER.info(PlayerElementAttachments.getCultivationElements(player)+"");
-            });
+            StringBuilder sendingString = new StringBuilder();
+            for(String string:this.meridianPathTracker){
+                sendingString.append(string);
+            }
+            CultivationMod.LOGGER.info(PlayerElementAttachments.getCultivationElements(player)+"");
+            CultivationMod.LOGGER.info("Sending: " + sendingString);
+            ClientPlayNetworking.send(new CultScreenPayload(sendingString.toString()));
+            //close();
         }));
 
         //dantian
@@ -403,7 +436,7 @@ public class CultivationScreen extends Screen {
             }
 
             meridianDirections.put("dantian", newState == 2 ? -1 : newState);
-            meridianPathTracker.add(0, "D" + newState);
+            meridianPathTracker.set(0, ""+ newState);
         })));
         rotationDirectionButtons.get(0).visible = true;
 
@@ -421,7 +454,7 @@ public class CultivationScreen extends Screen {
                 rotationDirectionButtons.get(2).visible = false;
             }
             meridianDirections.put("stomach",newState == 2 ? -1:newState);
-            meridianPathTracker.add(1,"ST"+newState);
+            meridianPathTracker.set(1,""+newState);
         })));
 
         //heart
@@ -450,11 +483,11 @@ public class CultivationScreen extends Screen {
             }
 
             meridianDirections.put("heart", newState == 2 ? -1 : newState);
-            meridianPathTracker.add(2, "HR" + newState);
+                meridianPathTracker.set(2, "" + newState);
         })));
 
         //shoulderL
-        rotationDirectionButtons.add(3,this.addDrawableChild(new RotationDirectionButton(k - 15 - (routingButtonSize/2), l-32 - (routingButtonSize/2), 3, (button) -> {
+        rotationDirectionButtons.add(3,this.addDrawableChild(new RotationDirectionButton(k - 20 - (routingButtonSize/2), l-38 - (routingButtonSize/2), 3, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if (newState == 3)
@@ -468,11 +501,11 @@ public class CultivationScreen extends Screen {
                 rotationDirectionButtons.get(5).visible = false;
             }
             meridianDirections.put("shoulderL", newState == 2 ? -1 : newState);
-            meridianPathTracker.add(3, "SL" + newState);
+            meridianPathTracker.set(3, "" + newState);
         })));
 
         //shoulderR
-        rotationDirectionButtons.add(4,this.addDrawableChild(new RotationDirectionButton(k + 15 - (routingButtonSize/2), l-32 - (routingButtonSize/2), 4, (button) -> {
+        rotationDirectionButtons.add(4,this.addDrawableChild(new RotationDirectionButton(k + 20 - (routingButtonSize/2), l-38 - (routingButtonSize/2), 4, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if (newState == 3)
@@ -486,29 +519,29 @@ public class CultivationScreen extends Screen {
                 rotationDirectionButtons.get(6).visible = false;
             }
             meridianDirections.put("shoulderR", newState == 2 ? -1 : newState);
-            meridianPathTracker.add(4, "SR" + newState);
+            meridianPathTracker.set(4, "" + newState);
         })));
 
         //armL
-        rotationDirectionButtons.add(5,this.addDrawableChild(new RotationDirectionButton(k -39 - (routingButtonSize/2), l-15 - (routingButtonSize/2), 5, (button) -> {
+        rotationDirectionButtons.add(5,this.addDrawableChild(new RotationDirectionButton(k -49 - (routingButtonSize/2), l-15 - (routingButtonSize/2), 5, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
             meridianDirections.put("armL",newState == 2 ? -1:newState);
-            meridianPathTracker.add(5,"AL"+newState);
+            meridianPathTracker.set(5,""+newState);
         })));
 
         //armR
-        rotationDirectionButtons.add(6,this.addDrawableChild(new RotationDirectionButton(k + 39 - (routingButtonSize/2), l-15 - (routingButtonSize/2), 6, (button) -> {
+        rotationDirectionButtons.add(6,this.addDrawableChild(new RotationDirectionButton(k + 49 - (routingButtonSize/2), l-15 - (routingButtonSize/2), 6, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
             meridianDirections.put("armR",newState == 2 ? -1:newState);
-            meridianPathTracker.add(6,"AR"+newState);
+            meridianPathTracker.set(6,""+newState);
         })));
 
         //head
@@ -519,11 +552,11 @@ public class CultivationScreen extends Screen {
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
             meridianDirections.put("head",newState == 2 ? -1:newState);
-            meridianPathTracker.add(7,"HE"+newState);
+            meridianPathTracker.set(7,""+newState);
         })));
 
         //gut
-        rotationDirectionButtons.add(8,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l+10 - (routingButtonSize/2), 8, (button) -> {
+        rotationDirectionButtons.add(8,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l+20 - (routingButtonSize/2), 8, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if (newState == 3)
@@ -542,29 +575,29 @@ public class CultivationScreen extends Screen {
             }
 
             meridianDirections.put("gut", newState == 2 ? -1 : newState);
-            meridianPathTracker.add(8, "G" + newState);
+            meridianPathTracker.set(8, "" + newState);
         })));
 
         //legL
-        rotationDirectionButtons.add(9,this.addDrawableChild(new RotationDirectionButton(k -27 - (routingButtonSize/2), l+25 - (routingButtonSize/2), 9, (button) -> {
+        rotationDirectionButtons.add(9,this.addDrawableChild(new RotationDirectionButton(k -37 - (routingButtonSize/2), l+25 - (routingButtonSize/2), 9, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
             meridianDirections.put("legL",newState == 2 ? -1:newState);
-            meridianPathTracker.add(9,"LL"+newState);
+            meridianPathTracker.set(9,""+newState);
         })));
 
         //legR
-        rotationDirectionButtons.add(10,this.addDrawableChild(new RotationDirectionButton(k +27- (routingButtonSize/2), l+25 - (routingButtonSize/2), 10, (button) -> {
+        rotationDirectionButtons.add(10,this.addDrawableChild(new RotationDirectionButton(k +37- (routingButtonSize/2), l+25 - (routingButtonSize/2), 10, (button) -> {
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if(newState == 3)
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
             meridianDirections.put("legR",newState == 2 ? -1:newState);
-            meridianPathTracker.add(10,"LR"+newState);
+            meridianPathTracker.set(10,""+newState);
         })));
     }
 
@@ -598,7 +631,7 @@ public class CultivationScreen extends Screen {
         @Override
         protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
             context.getMatrices().push();
-            context.getMatrices().translate(0,0,10);
+            context.getMatrices().translate(0,0,-20);
             super.renderWidget(context, mouseX, mouseY, delta);
             context.getMatrices().pop();
         }

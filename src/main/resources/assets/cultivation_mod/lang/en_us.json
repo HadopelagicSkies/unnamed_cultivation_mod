@@ -9,6 +9,8 @@
 
   "itemGroup.cultivation_mod": "Cultivation Mod",
 
+  "cultivation_mod.cultivation_screen.cultivate": "Circulate Qi",
+
   "item.cultivation_mod.unaspected_item.info": "Stored Qi: %1$s",
   "item.cultivation_mod.aspected_item.info": "Total Qi: %1$s",
   "item.cultivation_mod.aspected_item.info2": "%1$s Qi: %2$s",

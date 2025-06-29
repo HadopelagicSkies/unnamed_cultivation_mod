@@ -13,7 +13,7 @@ import java.util.Map;
 public class PlayerCultivationAttatchments {
 
     public static final AttachmentType<PlayerCultivation> PLAYER_CULTIVATION = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "player_cultivation"), infoBuilder ->
-            infoBuilder.initializer(() -> new PlayerCultivation(0,0,initMeridians()))
+            infoBuilder.initializer(() -> new PlayerCultivation(-1,0,initMeridians()))
                     .persistent(PlayerCultivation.PLAYER_CULTIVATION_CODEC)
                     .copyOnDeath()
                     .syncWith(PlayerCultivation.PLAYER_CULTIVATION_PACKET_CODEC, AttachmentSyncPredicate.targetOnly()));
