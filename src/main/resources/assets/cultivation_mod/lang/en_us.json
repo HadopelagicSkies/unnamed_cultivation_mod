@@ -15,6 +15,9 @@
   "item.cultivation_mod.aspected_item.info": "Total Qi: %1$s",
   "item.cultivation_mod.aspected_item.info2": "%1$s Qi: %2$s",
 
+  "tag.item.cultivation_mod.spirit_herb": "Spirit Herb",
+  "tag.item.cultivation_mod.spirit_stone": "Spirit Stone",
+
   "item.cultivation_mod.spirit_herb_fire": "Spirit Herb Materials: Fire",
   "item.cultivation_mod.spirit_herb_water": "Spirit Herb Materials: Water",
   "item.cultivation_mod.spirit_herb_air": "Spirit Herb Materials: Air",
@@ -25,5 +28,16 @@
   "item.cultivation_mod.spirit_stone_water": "Spirit Stone: Water",
   "item.cultivation_mod.spirit_stone_air": "Spirit Stone: Air",
   "item.cultivation_mod.spirit_stone_earth": "Spirit Stone: Earth",
-  "item.cultivation_mod.spirit_stone_lightning": "Spirit Stone: Lightning"
+  "item.cultivation_mod.spirit_stone_lightning": "Spirit Stone: Lightning",
+
+  "item.cultivation_mod.spirit_herb_mash": "Spirit Herb Mash",
+  "item.cultivation_mod.spirit_herb_mash.info": "Infuses you with a small amount of Qi; Allows you to begin to visualize your Dantian",
+  "effect.cultivation_mod.dantian_sense": "Dantian Sense",
+
+  "item.cultivation_mod.qi_efficiency_pill": "Qi Efficiency Pill",
+  "item.cultivation_mod.qi_efficiency_pill.info": "Allows the body to absorb Qi more easily",
+  "effect.cultivation_mod.qi_efficiency": "Qi Efficiency",
+
+  "item.cultivation_mod.root_regrowth_elixir": "Spiritual Root Regrowth Elixir",
+  "item.cultivation_mod.root_regrowth_elixir.info": "Destroys your cultivation, but regrows a new, random spiritual root"
 }

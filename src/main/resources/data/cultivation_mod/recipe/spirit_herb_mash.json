@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#cultivation_mod:spirit_herb",
+    "#cultivation_mod:spirit_herb",
+    "#cultivation_mod:spirit_herb",
+    "minecraft:potion"
+  ],
+  "result": {
+    "count": 1,
+    "id": "cultivation_mod:spirit_herb_mash"
+  }
+}

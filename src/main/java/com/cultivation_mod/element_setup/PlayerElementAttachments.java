@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class PlayerElementAttachments {
     public static final AttachmentType<PlayerElements> CULTIVATION_ELEMENTS = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "cultivation_elements"), infoBuilder ->
-            infoBuilder.initializer(() -> new PlayerElements(new HashMap<AxisElements, Integer>(),new ArrayList<>()))
+            infoBuilder.initializer(() -> new PlayerElements(new HashMap<>(),new ArrayList<>()))
                     .persistent(PlayerElements.PLAYER_ELEMENTS_CODEC)
                     .copyOnDeath()
                     .syncWith(PlayerElements.PLAYER_ELEMENTS_PACKET_CODEC,AttachmentSyncPredicate.targetOnly()));
@@ -42,7 +42,7 @@ public class PlayerElementAttachments {
     }
 
     public static void setElementLevel(AttachmentTarget target, AxisElements element, int level) {
-        Map<AxisElements, Integer> newMap = getElementMap(target);
+        Map<AxisElements, Integer> newMap = new HashMap<>(getElementMap(target));
         newMap.put(element,level);
         target.setAttached(CULTIVATION_ELEMENTS,new PlayerElements(newMap,getFavoredElements(target)));
     }

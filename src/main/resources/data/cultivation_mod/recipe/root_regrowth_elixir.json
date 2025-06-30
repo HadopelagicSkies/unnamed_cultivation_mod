@@ -1,0 +1,17 @@
+{
+  "type": "cultivation_mod:alchemy_recipe",
+  "category": "misc",
+  "ingredients": [
+    "cultivation_mod:spirit_stone_fire",
+    "cultivation_mod:spirit_stone_water",
+    "cultivation_mod:spirit_stone_air",
+    "cultivation_mod:spirit_stone_earth",
+    "cultivation_mod:spirit_stone_lightning",
+    "minecraft:fermented_spider_eye",
+    "minecraft:blaze_powder"
+  ],
+  "result": {
+    "count": 1,
+    "id": "cultivation_mod:root_regrowth_elixir"
+  }
+}

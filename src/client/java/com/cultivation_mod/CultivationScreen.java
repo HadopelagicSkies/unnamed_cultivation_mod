@@ -418,6 +418,8 @@ public class CultivationScreen extends Screen {
 
         //dantian
         rotationDirectionButtons.add(0,this.addDrawableChild(new RotationDirectionButton(k - (routingButtonSize/2), l - (routingButtonSize/2), 0, (button) -> {
+            if (playerTier <0)
+                return;
             int oldState = ((RotationDirectionButton) button).getState();
             int newState = oldState + 1;
             if (newState == 3)

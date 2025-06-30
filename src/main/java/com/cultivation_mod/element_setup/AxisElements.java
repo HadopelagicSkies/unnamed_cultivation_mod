@@ -43,6 +43,6 @@ public enum AxisElements implements StringIdentifiable {
     }
     public static final IntFunction<AxisElements> INDEX_TO_VALUE = ValueLists.createIdToValueFunction(AxisElements::ordinal, values(), ValueLists.OutOfBoundsHandling.ZERO);
     public static final PacketCodec<ByteBuf, AxisElements> AXIS_ELEMENTS_PACKET_CODEC = PacketCodecs.indexed(INDEX_TO_VALUE, AxisElements::ordinal);
-    public static final Codec<AxisElements> AXIS_ELEMENTS_CODEC = Codec.INT.xmap(INDEX_TO_VALUE::apply, AxisElements::ordinal);
+    public static final Codec<AxisElements> AXIS_ELEMENTS_CODEC = StringIdentifiable.createCodec(AxisElements::values);
     public static final Codec<Map<AxisElements, Integer>> ELEMENT_MAP_CODEC = Codec.unboundedMap(AxisElements.AXIS_ELEMENTS_CODEC,Codec.INT);
 }

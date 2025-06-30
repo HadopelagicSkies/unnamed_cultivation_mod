@@ -73,7 +73,7 @@ public class PlayerCultivationAttatchments {
     }
 
     public static void setSpecificMeridianProgress(AttachmentTarget target, String key, int progress){
-        Map<String, Integer> newProgress = target.getAttached(PLAYER_CULTIVATION).meridianProgress();
+        Map<String, Integer> newProgress = new HashMap<>(target.getAttached(PLAYER_CULTIVATION).meridianProgress());
         newProgress.put(key,progress);
         PlayerCultivation newCultivation = new PlayerCultivation(target.getAttached(PLAYER_CULTIVATION).realm(),target.getAttached(PLAYER_CULTIVATION).qi(),newProgress);
         target.setAttached(PLAYER_CULTIVATION,newCultivation);

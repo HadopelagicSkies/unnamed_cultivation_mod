@@ -3,6 +3,8 @@ package com.cultivation_mod;
 import com.cultivation_mod.element_setup.AxisElements;
 import com.cultivation_mod.items.AspectedQiItem;
 import com.cultivation_mod.items.QiEfficiencyPill;
+import com.cultivation_mod.items.RootRegrowthElixir;
+import com.cultivation_mod.items.SpiritHerbMash;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Block;
@@ -14,7 +16,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -38,12 +39,16 @@ public class CultivationModItems {
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_EARTH);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_LIGHTNING);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS);
+
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_FIRE);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_WATER);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_AIR);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_EARTH);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_LIGHTNING);
+
                     itemGroup.add(CultivationModItems.QI_EFFICIENCY_PILL);
+                    itemGroup.add(CultivationModItems.ROOT_REGROWTH_ELIXIR);
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_MASH);
                 });
     }
 
@@ -76,11 +81,6 @@ public class CultivationModItems {
     private static Function<Item.Settings, Item> createBlockItemWithUniqueName(Block block) {
         return (settings) -> new BlockItem(block, settings.useItemPrefixedTranslationKey());
     }
-    private static <T extends Item> T addToTag(T item,TagKey<Item> tagKey){
-
-        return item;
-    }
-
 
     public static final AspectedQiItem SPIRIT_HERB_FIRE = register(AspectedQiItem::new,
             new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.FIRE,50)),
@@ -133,6 +133,16 @@ public class CultivationModItems {
     public static final QiEfficiencyPill QI_EFFICIENCY_PILL = register(QiEfficiencyPill::new,
             new Item.Settings().component(CultivationModComponents.ITEM_QI, 100),
             "qi_efficiency_pill"
+    );
+
+    public static final RootRegrowthElixir ROOT_REGROWTH_ELIXIR = register(RootRegrowthElixir::new,
+            new Item.Settings().component(CultivationModComponents.ITEM_QI, 100),
+            "root_regrowth_elixir"
+    );
+
+    public static final SpiritHerbMash SPIRIT_HERB_MASH = register(SpiritHerbMash::new,
+            new Item.Settings(),
+            "spirit_herb_mash"
     );
 
 }

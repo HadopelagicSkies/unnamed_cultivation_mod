@@ -1,11 +1,14 @@
 package com.cultivation_mod.cultivation_setup;
 
+import com.cultivation_mod.element_setup.PlayerElements;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.encoding.VarInts;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public record PlayerCultivation(int realm, int qi, Map<String, Integer> meridianProgress){
@@ -18,25 +21,12 @@ public record PlayerCultivation(int realm, int qi, Map<String, Integer> meridian
             MERIDIAN_PROGRESS_CODEC.fieldOf("meridianProgress").forGetter(PlayerCultivation::meridianProgress)
     ).apply(i, PlayerCultivation::new));
 
-    public static final PacketCodec<ByteBuf,PlayerCultivation> PLAYER_CULTIVATION_PACKET_CODEC = new PacketCodec<ByteBuf, PlayerCultivation>() {
-        @Override
-        public PlayerCultivation decode(ByteBuf buf) {
-            int realm = buf.readInt();
-            int qi = buf.readInt();
-            Map<String, Integer> meridianProgress = PlayerCultivationAttatchments.initMeridians();
-            meridianProgress.forEach((meridian,progress) -> meridianProgress.put(meridian,buf.readInt()));
-            return new PlayerCultivation(realm,qi,meridianProgress);
-        }
-
-        @Override
-        public void encode(ByteBuf buf, PlayerCultivation value) {
-            VarInts.write(buf,value.realm);
-            VarInts.write(buf,value.qi);
-            value.meridianProgress.forEach((meridian,progress) -> VarInts.write(buf,progress));
-        }
-    };
-
-
-
-
+    public static final PacketCodec<ByteBuf,PlayerCultivation> PLAYER_CULTIVATION_PACKET_CODEC = PacketCodec.tuple(
+            PacketCodecs.INTEGER,
+            PlayerCultivation::realm,
+            PacketCodecs.INTEGER,
+            PlayerCultivation::qi,
+            PacketCodecs.map(HashMap::new,PacketCodecs.STRING,PacketCodecs.INTEGER,10),
+            PlayerCultivation::meridianProgress,
+            PlayerCultivation::new);
 }

@@ -31,6 +31,10 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_AIR, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_EARTH, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_LIGHTNING, Models.GENERATED);
+
+        itemModelGenerator.register(CultivationModItems.QI_EFFICIENCY_PILL, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.ROOT_REGROWTH_ELIXIR, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_MASH, Models.GENERATED);
     }
 
     @Override
