@@ -1,6 +1,6 @@
 package com.cultivation_mod;
 
-import com.cultivation_mod.cultivation_setup.PlayerCultivationAttatchments;
+import com.cultivation_mod.cultivation_setup.PlayerCultivationAttachments;
 import com.cultivation_mod.element_setup.PlayerElementAttachments;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -102,12 +102,12 @@ public class CultivationScreen extends Screen {
     protected CultivationScreen(PlayerEntity player) {
         super(Text.translatable("gui.cultivation_mod.cultivation_screen"));
         this.player = player;
-        this.playerTier = PlayerCultivationAttatchments.getRealm(player);
+        this.playerTier = PlayerCultivationAttachments.getRealm(player);
         this.titleX = 10;
         this.titleY = 10;
         this.backgroundWidth = 276;
         this.backgroundHeight = 253;
-        PlayerCultivationAttatchments.getMeridianProgress(this.player).forEach((meridian,progress) ->{
+        PlayerCultivationAttachments.getMeridianProgress(this.player).forEach((meridian, progress) ->{
             meridianDirections.put(meridian,0);
         });
         meridianDirections.put("dantian",0);
@@ -349,7 +349,7 @@ public class CultivationScreen extends Screen {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
 
-        Map<String, Integer> meridianMap = PlayerCultivationAttatchments.getMeridianProgress(this.player);
+        Map<String, Integer> meridianMap = PlayerCultivationAttachments.getMeridianProgress(this.player);
         meridianMap.forEach((meridian,progress) ->{
             switch (meridian){
                 case("head") -> {
@@ -426,12 +426,12 @@ public class CultivationScreen extends Screen {
                 newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "stomach") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "stomach") >= 100) {
                 rotationDirectionButtons.get(1).visible = true;
             } else {
                 rotationDirectionButtons.get(1).visible = false;
             }
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "gut") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "gut") >= 100) {
                 rotationDirectionButtons.get(8).visible = true;
             }else {
                 rotationDirectionButtons.get(8).visible = false;
@@ -450,7 +450,7 @@ public class CultivationScreen extends Screen {
                 newState =0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "heart") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "heart") >= 100) {
                 rotationDirectionButtons.get(2).visible = true;
             } else{
                 rotationDirectionButtons.get(2).visible = false;
@@ -468,17 +468,17 @@ public class CultivationScreen extends Screen {
             ((RotationDirectionButton) button).setState(newState);
 
 
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "shoulderL") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "shoulderL") >= 100) {
                 rotationDirectionButtons.get(3).visible = true;
             } else {
                 rotationDirectionButtons.get(3).visible = false;
             }
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "shoulderR") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "shoulderR") >= 100) {
                 rotationDirectionButtons.get(4).visible = true;
             } else {
                 rotationDirectionButtons.get(4).visible = false;
             }
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "head") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "head") >= 100) {
                 rotationDirectionButtons.get(7).visible = true;
             } else {
                 rotationDirectionButtons.get(7).visible = false;
@@ -496,7 +496,7 @@ public class CultivationScreen extends Screen {
                 newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "armL") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "armL") >= 100) {
                 rotationDirectionButtons.get(5).visible = true;
 
             } else {
@@ -514,7 +514,7 @@ public class CultivationScreen extends Screen {
                 newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "armR") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "armR") >= 100) {
                 rotationDirectionButtons.get(6).visible = true;
 
             } else {
@@ -565,12 +565,12 @@ public class CultivationScreen extends Screen {
                 newState = 0;
             ((RotationDirectionButton) button).setState(newState);
 
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "legL") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "legL") >= 100) {
                 rotationDirectionButtons.get(9).visible = true;
             } else {
                 rotationDirectionButtons.get(9).visible = false;
             }
-            if (PlayerCultivationAttatchments.getSpecificMeridianProgress(player, "legR") >= 100) {
+            if (PlayerCultivationAttachments.getSpecificMeridianProgress(player, "legR") >= 100) {
                 rotationDirectionButtons.get(10).visible = true;
             } else {
                 rotationDirectionButtons.get(10).visible = false;

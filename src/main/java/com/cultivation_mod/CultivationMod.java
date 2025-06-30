@@ -1,12 +1,10 @@
 package com.cultivation_mod;
 
 import com.cultivation_mod.cultivation_setup.PlayerCultivation;
-import com.cultivation_mod.cultivation_setup.PlayerCultivationAttatchments;
+import com.cultivation_mod.cultivation_setup.PlayerCultivationAttachments;
 import com.cultivation_mod.element_setup.PlayerElementAttachments;
 import com.cultivation_mod.recipes.AlchemyRecipe;
 import com.cultivation_mod.recipes.AlchemyRecipeSerializer;
-import com.cultivation_mod.status_effects.DantianSenseEffect;
-import com.cultivation_mod.status_effects.QiEfficiencyEffect;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
@@ -33,6 +31,8 @@ public class CultivationMod implements ModInitializer {
 		CultivationModComponents.initialize();
 		CultivationModTags.initialize();
 		CultivationModEffects.initialize();
+		PlayerCultivationAttachments.initialize();
+		PlayerElementAttachments.initialize();
 
 		Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(MOD_ID, AlchemyRecipeSerializer.ID), AlchemyRecipeSerializer.INSTANCE);
 		Registry.register(Registries.RECIPE_TYPE, Identifier.of(MOD_ID, AlchemyRecipe.Type.ID), AlchemyRecipe.Type.INSTANCE);
@@ -42,8 +42,8 @@ public class CultivationMod implements ModInitializer {
 				if(PlayerElementAttachments.getCultivationElements(entity) == null){
 					PlayerElementAttachments.setCultivationElements(entity,PlayerElementAttachments.createRandomInitElements((PlayerEntity) entity));
 				}
-				if(PlayerCultivationAttatchments.getCultivation(entity) == null){
-					PlayerCultivationAttatchments.setCultivation(entity,new PlayerCultivation(-1,0,PlayerCultivationAttatchments.initMeridians()));
+				if(PlayerCultivationAttachments.getCultivation(entity) == null){
+					PlayerCultivationAttachments.setCultivation(entity,new PlayerCultivation(-1,0, PlayerCultivationAttachments.initMeridians()));
 				}
 			}
 		});

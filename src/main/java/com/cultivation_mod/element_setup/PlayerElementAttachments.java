@@ -13,12 +13,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("UnstableApiUsage")
 public class PlayerElementAttachments {
+
     public static final AttachmentType<PlayerElements> CULTIVATION_ELEMENTS = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "cultivation_elements"), infoBuilder ->
             infoBuilder.initializer(() -> new PlayerElements(new HashMap<>(),new ArrayList<>()))
                     .persistent(PlayerElements.PLAYER_ELEMENTS_CODEC)
                     .copyOnDeath()
                     .syncWith(PlayerElements.PLAYER_ELEMENTS_PACKET_CODEC,AttachmentSyncPredicate.targetOnly()));
+
+    public static void initialize(){};
 
     public static void setCultivationElements(AttachmentTarget target, PlayerElements elements) {
         target.setAttached(CULTIVATION_ELEMENTS,elements);

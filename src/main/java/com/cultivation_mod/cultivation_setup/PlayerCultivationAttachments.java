@@ -10,13 +10,16 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerCultivationAttatchments {
+@SuppressWarnings("UnstableApiUsage")
+public class PlayerCultivationAttachments {
 
     public static final AttachmentType<PlayerCultivation> PLAYER_CULTIVATION = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "player_cultivation"), infoBuilder ->
             infoBuilder.initializer(() -> new PlayerCultivation(-1,0,initMeridians()))
                     .persistent(PlayerCultivation.PLAYER_CULTIVATION_CODEC)
                     .copyOnDeath()
                     .syncWith(PlayerCultivation.PLAYER_CULTIVATION_PACKET_CODEC, AttachmentSyncPredicate.targetOnly()));
+
+    public static void initialize(){};
 
     public static Map<String, Integer> initMeridians(){
         Map<String, Integer> meridianMap = new HashMap<>();
