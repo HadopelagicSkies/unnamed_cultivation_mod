@@ -1,11 +1,13 @@
 package com.cultivation_mod;
 
 import com.cultivation_mod.cultivation_setup.PlayerCultivationAttachments;
+import com.cultivation_mod.element_setup.AxisElements;
 import com.cultivation_mod.element_setup.PlayerElementAttachments;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -31,9 +33,11 @@ public class CultivationScreen extends Screen {
     private final int backgroundHeight;
     private float mouseX;
     private float mouseY;
-    private int framesOpen;
+    private int ticksOpen;
+    private long startTime;
 
     private static final int routingButtonSize=15;
+    private static final int pentagonCornerOffset = 15;
 
     private static final Identifier CW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/cw_button_icon.png");
     private static final Identifier CCW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/ccw_button_icon.png");
@@ -93,6 +97,16 @@ public class CultivationScreen extends Screen {
     private static final Identifier GUT3 = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/gut3.png");
     private static final Identifier GUT_DARK = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/gut_dark.png");
 
+    private static final Identifier PENTAGON_BACKGROUND = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_background.png");
+    private static final Identifier PENTAGON_FIRE = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_fire.png");
+    private static final Identifier PENTAGON_WATER = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_water.png");
+    private static final Identifier PENTAGON_AIR = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_air.png");
+    private static final Identifier PENTAGON_EARTH = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_earth.png");
+    private static final Identifier PENTAGON_LIGHTNING = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_lightning.png");
+    private static final Identifier PENTAGON_MIDDLE = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_middle.png");
+
+
+
     private AcceptCultivationButton acceptCultivationButton;
     private List<RotationDirectionButton> rotationDirectionButtons = new ArrayList<>();
 
@@ -107,6 +121,7 @@ public class CultivationScreen extends Screen {
         this.titleY = 10;
         this.backgroundWidth = 276;
         this.backgroundHeight = 253;
+        this.startTime = MinecraftClient.getInstance().world.getTime();
         PlayerCultivationAttachments.getMeridianProgress(this.player).forEach((meridian, progress) ->{
             meridianDirections.put(meridian,0);
         });
@@ -123,8 +138,8 @@ public class CultivationScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        drawBackground(context,delta,mouseX,mouseY);
         super.render(context, mouseX, mouseY, delta);
+        drawBackground(context,delta,mouseX,mouseY);
 
         this.mouseX = (float)mouseX;
         this.mouseY = (float)mouseY;
@@ -132,15 +147,48 @@ public class CultivationScreen extends Screen {
         int j = (this.height - this.backgroundHeight) / 2;
         context.drawText(textRenderer,this.title,i + titleX, j + titleY, Colors.BLACK,false);
 
+
+        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_BACKGROUND, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54);
         if(playerTier >= 0) {
             context.drawTexture(RenderLayer::getGuiTextured, MERIDIANS, i + 93, j + 27, 0.0F, 0.0F, 91, 113, 91, 113, ColorHelper.getArgb(0, 104, 178));
             drawMeridianDirection(context);
             drawMeridianClearing(context);
             context.drawTexture(RenderLayer::getGuiTextured, DANTIAN, i + 130, j + 92, 0.0F, 0.0F, 17, 17, 17, 17);
+            drawPentagonTextures(context);
+        }
+        else{
+
         }
         drawButtonIcons(context);
 
-        this.framesOpen++;
+        if(acceptCultivationButton.running) {
+            acceptCultivationButton.setMessage(Text.translatable(CultivationMod.MOD_ID+".cultivation_screen.running",
+                    ticksOpen /1200 + ":" + ((((ticksOpen/20)%60)<10) ? "0"+(ticksOpen/20)%60 : ""+(ticksOpen/20)%60)));
+            if(ticksOpen%200 == 0){
+                sendPacket();
+            }
+        }
+
+        this.ticksOpen = (int) (MinecraftClient.getInstance().world.getTime() - this.startTime);
+    }
+
+    private void drawPentagonTextures(DrawContext context){
+        int i = (this.width - this.backgroundWidth) / 2;
+        int j = (this.height - this.backgroundHeight) / 2;
+
+        Map<AxisElements, Integer> elementMap = PlayerElementAttachments.getElementMap(this.player);
+        int totalElements = elementMap.values().stream().mapToInt(value -> value).sum() - elementMap.get(AxisElements.YIN) - elementMap.get(AxisElements.YANG);
+        elementMap.forEach(((elements, integer) -> {
+            switch (elements){
+                case FIRE -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_FIRE, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.FIRE.getColor()));
+                case WATER -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_WATER, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.WATER.getColor()));
+                case AIR -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_AIR, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.AIR.getColor()));
+                case EARTH -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_EARTH, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.EARTH.getColor()));
+                case LIGHTNING -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_LIGHTNING, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.LIGHTNING.getColor()));
+            }
+        }));
+        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_MIDDLE, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,
+                elementMap.get(AxisElements.YIN) > elementMap.get(AxisElements.YANG)?ColorHelper.withAlpha((int)(255*0.75),AxisElements.YIN.getColor()):ColorHelper.withAlpha((int)(255*0.75),AxisElements.YANG.getColor()));
     }
 
     private void drawButtonIcons(DrawContext context){
@@ -165,8 +213,8 @@ public class CultivationScreen extends Screen {
     private void drawMeridianDirection(DrawContext context) {
         int i = ((this.width - this.backgroundWidth) / 2) +1;   // coords were based on the dark texture coords, which are 1 larger each direction
         int j = ((this.height - this.backgroundHeight) / 2) +1; // manually scooching over here
-        int frequency = 30;
-        int frameTime = this.framesOpen % frequency+1;
+        int frequency = 10;
+        int frameTime = this.ticksOpen % frequency+1;
 
         meridianDirections.forEach((meridian,direction) -> {
             switch (meridian) {
@@ -396,6 +444,16 @@ public class CultivationScreen extends Screen {
         });
     }
 
+    private void sendPacket(){
+        StringBuilder sendingString = new StringBuilder();
+        for(String string:this.meridianPathTracker){
+            sendingString.append(string);
+        }
+        CultivationMod.LOGGER.info(PlayerElementAttachments.getCultivationElements(player)+"");
+        CultivationMod.LOGGER.info("Sending: " + sendingString);
+        ClientPlayNetworking.send(new CultScreenPayload(sendingString.toString()));
+    }
+
     @Override
     protected void init() {
         super.init();
@@ -406,14 +464,17 @@ public class CultivationScreen extends Screen {
         int l = j+100; // dantian y center
 
         this.acceptCultivationButton = this.addDrawableChild(new AcceptCultivationButton(i + 70, j+169, 11, (button) -> {
-            StringBuilder sendingString = new StringBuilder();
-            for(String string:this.meridianPathTracker){
-                sendingString.append(string);
+            if(((AcceptCultivationButton)button).running){
+                ((AcceptCultivationButton)button).setRunning(false);
+                rotationDirectionButtons.getFirst().visible = true;
+                acceptCultivationButton.setMessage(Text.translatable(CultivationMod.MOD_ID+".cultivation_screen.not_running"));
+            } else {
+                rotationDirectionButtons.forEach((directionButton) -> directionButton.visible = false);
+                ((AcceptCultivationButton) button).setRunning(true);
+                this.startTime = MinecraftClient.getInstance().world.getTime();
+
             }
-            CultivationMod.LOGGER.info(PlayerElementAttachments.getCultivationElements(player)+"");
-            CultivationMod.LOGGER.info("Sending: " + sendingString);
-            ClientPlayNetworking.send(new CultScreenPayload(sendingString.toString()));
-            //close();
+
         }));
 
         //dantian
@@ -603,17 +664,37 @@ public class CultivationScreen extends Screen {
         })));
     }
 
-
+    @Override
+    public boolean shouldPause() {
+        return false;
+    }
 
     @Environment(EnvType.CLIENT)
     public static class AcceptCultivationButton extends ButtonWidget {
         final int index;
-
+        public boolean running = false;
         public AcceptCultivationButton(final int x, final int y, final int index, final PressAction onPress) {
-            super(x, y, 135, 25, Text.translatable(CultivationMod.MOD_ID+".cultivation_screen.cultivate"), onPress, DEFAULT_NARRATION_SUPPLIER);
+            super(x, y, 135, 20, Text.translatable(CultivationMod.MOD_ID+".cultivation_screen.not_running"), onPress, DEFAULT_NARRATION_SUPPLIER);
             this.index = index;
             this.visible = true;
         }
+
+        public void setRunning(boolean running) {
+            this.running = running;
+        }
+
+        public boolean isRunning() {
+            return running;
+        }
+
+        @Override
+        protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+            context.getMatrices().push();
+            context.getMatrices().translate(0,0,20);
+            super.renderWidget(context, mouseX, mouseY, delta);
+            context.getMatrices().pop();
+        }
+
 
         public int getIndex() {
             return this.index;
@@ -628,14 +709,6 @@ public class CultivationScreen extends Screen {
             super(x, y,routingButtonSize,routingButtonSize, ScreenTexts.EMPTY, onPress, DEFAULT_NARRATION_SUPPLIER);
             this.index = index;
             this.visible = false;
-        }
-
-        @Override
-        protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-            context.getMatrices().push();
-            context.getMatrices().translate(0,0,-20);
-            super.renderWidget(context, mouseX, mouseY, delta);
-            context.getMatrices().pop();
         }
 
         public int getState() {

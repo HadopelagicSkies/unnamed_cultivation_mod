@@ -49,7 +49,11 @@ public class ProcessCultivation {
             rollMeridianClearing(player,"legR");
         }
 
-
+        elements.playerElements().forEach(((element, integer) -> {
+            if(elements.favoredElements().contains(element)){
+                PlayerElementAttachments.setElementLevel(player,element,PlayerElementAttachments.getElementLevel(player,element)+player.getRandom().nextBetween(10,50));
+            }
+        }));
 
     }
 

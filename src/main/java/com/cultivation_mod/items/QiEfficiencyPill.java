@@ -11,6 +11,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
@@ -24,13 +26,15 @@ public class QiEfficiencyPill extends UnaspectedQiItem  {
                             consumeAction(world, user, stack);
                             return true;
                         }
-                )).build()));
+                ))
+                .finishSound(RegistryEntry.of(SoundEvents.BLOCK_AMETHYST_BLOCK_STEP))
+                .build()));
     }
 
     public static void consumeAction(World world, LivingEntity user, ItemStack stack) {
         if(stack.get(CultivationModComponents.ITEM_QI) != null) {
             int storedQi = stack.get(CultivationModComponents.ITEM_QI);
-            user.addStatusEffect(new StatusEffectInstance(CultivationModEffects.QI_EFFICIENCY,6000,storedQi/100));
+            user.addStatusEffect(new StatusEffectInstance(CultivationModEffects.QI_EFFICIENCY,6000,(Math.max(storedQi-100,0))/100));
             int startQi = PlayerCultivationAttachments.getQi(user);
             PlayerCultivationAttachments.setQi(user,storedQi+startQi);
         }

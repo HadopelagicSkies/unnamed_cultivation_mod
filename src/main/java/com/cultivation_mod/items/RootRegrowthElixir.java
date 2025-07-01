@@ -12,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
@@ -25,7 +26,9 @@ public class RootRegrowthElixir extends UnaspectedQiItem{
                             consumeAction(world, user, stack);
                             return true;
                         }
-                )).build()));
+                ))
+                .finishSound(SoundEvents.ITEM_TRIDENT_THUNDER)
+                .build()));
     }
 
     public static void consumeAction(World world, LivingEntity user, ItemStack stack) {

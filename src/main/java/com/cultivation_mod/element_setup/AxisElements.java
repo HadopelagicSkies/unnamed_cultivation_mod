@@ -7,6 +7,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.function.ValueLists;
 
@@ -14,13 +15,13 @@ import java.util.Map;
 import java.util.function.IntFunction;
 
 public enum AxisElements implements StringIdentifiable {
-    FIRE("fire", Colors.RED),
-    WATER("water", Colors.BLUE),
-    AIR("air", Colors.GREEN),
-    EARTH("earth", Colors.YELLOW),
-    LIGHTNING("lightning", Colors.PURPLE),
-    YIN("yin", Colors.GRAY),
-    YANG("yang", Colors.WHITE),
+    FIRE("fire", DyeColor.RED.getEntityColor()),
+    WATER("water", DyeColor.BLUE.getEntityColor()),
+    AIR("air", DyeColor.YELLOW.getEntityColor()),
+    EARTH("earth", DyeColor.BROWN.getEntityColor()),
+    LIGHTNING("lightning", DyeColor.PURPLE.getEntityColor()),
+    YIN("yin", DyeColor.GRAY.getEntityColor()),
+    YANG("yang", DyeColor.WHITE.getEntityColor()),
     ;
 
     private final String name;
@@ -35,6 +36,10 @@ public enum AxisElements implements StringIdentifiable {
 
     public Text getTranslatableName() {
         return translatableName;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     @Override
