@@ -1,4 +1,5 @@
 {
+  "cultivation_mod.qi": "Qi",
   "cultivation_mod.fire": "Fire",
   "cultivation_mod.water": "Water",
   "cultivation_mod.air": "Air",
@@ -9,6 +10,7 @@
 
   "itemGroup.cultivation_mod": "Cultivation Mod",
 
+  "gui.cultivation_mod.cultivation_screen": "Cultivation",
   "cultivation_mod.cultivation_screen.not_running": "Circulate Qi",
   "cultivation_mod.cultivation_screen.running": "Time Elapsed: %1$s",
 
