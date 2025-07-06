@@ -38,6 +38,8 @@ public class CultivationScreen extends Screen {
 
     private static final int routingButtonSize=15;
     private static final int pentagonCornerOffset = 15;
+    private static final int qiMeterCornerOffset = 15;
+    private static final int qiMeterHeight = 148;
 
     private static final Identifier CW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/cw_button_icon.png");
     private static final Identifier CCW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/ccw_button_icon.png");
@@ -105,6 +107,9 @@ public class CultivationScreen extends Screen {
     private static final Identifier PENTAGON_LIGHTNING = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_lightning.png");
     private static final Identifier PENTAGON_MIDDLE = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/pentagon_middle.png");
 
+    private static final Identifier QI_METER_BACKGROUND = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/qi_meter_background.png");
+    private static final Identifier QI_METER = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/qi_meter.png");
+
 
 
     private AcceptCultivationButton acceptCultivationButton;
@@ -148,7 +153,7 @@ public class CultivationScreen extends Screen {
         context.drawText(textRenderer,this.title,i + titleX, j + titleY, Colors.BLACK,false);
 
 
-        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_BACKGROUND, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54);
+        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_BACKGROUND, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54);
         if(playerTier >= 0) {
             context.drawTexture(RenderLayer::getGuiTextured, MERIDIANS, i + 93, j + 27, 0.0F, 0.0F, 91, 113, 91, 113, ColorHelper.getArgb(0, 104, 178));
             drawMeridianDirection(context);
@@ -160,8 +165,10 @@ public class CultivationScreen extends Screen {
 
         }
         drawButtonIcons(context);
+        context.drawTexture(RenderLayer::getGuiTextured, QI_METER_BACKGROUND, i + qiMeterCornerOffset, j+this.backgroundHeight-qiMeterCornerOffset-qiMeterHeight-10, 0.0F, 0.0F, 18, 157, 18, 157);
+        context.drawTexture(RenderLayer::getGuiTextured, QI_METER, i+qiMeterCornerOffset+5, j+this.backgroundHeight-qiMeterCornerOffset-5-(qiMeterHeight*PlayerCultivationAttachments.getQi(player)/ProcessCultivation.getRealmMaxQi(playerTier)), 0.0F, 0.0F, 8,(qiMeterHeight*PlayerCultivationAttachments.getQi(player)/ProcessCultivation.getRealmMaxQi(playerTier)) , 8, 148);
 
-        if(acceptCultivationButton.running) {
+        if(acceptCultivationButton.running&&ticksOpen!=0) {
             acceptCultivationButton.setMessage(Text.translatable(CultivationMod.MOD_ID+".cultivation_screen.running",
                     ticksOpen /1200 + ":" + ((((ticksOpen/20)%60)<10) ? "0"+(ticksOpen/20)%60 : ""+(ticksOpen/20)%60)));
             if(ticksOpen%200 == 0){
@@ -180,14 +187,14 @@ public class CultivationScreen extends Screen {
         int totalElements = elementMap.values().stream().mapToInt(value -> value).sum() - elementMap.get(AxisElements.YIN) - elementMap.get(AxisElements.YANG);
         elementMap.forEach(((elements, integer) -> {
             switch (elements){
-                case FIRE -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_FIRE, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.FIRE.getColor()));
-                case WATER -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_WATER, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.WATER.getColor()));
-                case AIR -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_AIR, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.AIR.getColor()));
-                case EARTH -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_EARTH, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.EARTH.getColor()));
-                case LIGHTNING -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_LIGHTNING, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.LIGHTNING.getColor()));
+                case FIRE -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_FIRE, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.FIRE.getColor()));
+                case WATER -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_WATER, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.WATER.getColor()));
+                case AIR -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_AIR, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.AIR.getColor()));
+                case EARTH -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_EARTH, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.EARTH.getColor()));
+                case LIGHTNING -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_LIGHTNING, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.LIGHTNING.getColor()));
             }
         }));
-        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_MIDDLE, i + pentagonCornerOffset, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,
+        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_MIDDLE, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,
                 elementMap.get(AxisElements.YIN) > elementMap.get(AxisElements.YANG)?ColorHelper.withAlpha((int)(255*0.75),AxisElements.YIN.getColor()):ColorHelper.withAlpha((int)(255*0.75),AxisElements.YANG.getColor()));
     }
 

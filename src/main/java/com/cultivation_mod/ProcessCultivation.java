@@ -32,6 +32,7 @@ public class ProcessCultivation {
         CultivationMod.LOGGER.info(""+elements);
         CultivationMod.LOGGER.info(""+cultivation);
 
+        int numMeridiansCleared =0;
         Map<AxisElements,Integer> meridianElementValues = new HashMap<>();
         for(AxisElements meridianElement:AxisElements.values())
             meridianElementValues.put(meridianElement,0);
@@ -45,7 +46,9 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
+        else return;
         //stomach
         if(Integer.parseInt(String.valueOf(pattern.charAt(1))) != 0){
             rollMeridianClearing(player,"heart");
@@ -54,6 +57,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //heart
         if(Integer.parseInt(String.valueOf(pattern.charAt(2))) != 0){
@@ -65,6 +69,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //shoulderL
         if(Integer.parseInt(String.valueOf(pattern.charAt(3))) != 0){
@@ -74,6 +79,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //shoulderR
         if(Integer.parseInt(String.valueOf(pattern.charAt(4))) != 0){
@@ -83,6 +89,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //armL
         if(Integer.parseInt(String.valueOf(pattern.charAt(5))) != 0){
@@ -91,6 +98,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //armR
         if(Integer.parseInt(String.valueOf(pattern.charAt(6))) != 0){
@@ -99,6 +107,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //head
         if(Integer.parseInt(String.valueOf(pattern.charAt(7))) != 0){
@@ -107,6 +116,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //gut
         if(Integer.parseInt(String.valueOf(pattern.charAt(8))) != 0){
@@ -117,6 +127,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //legL
         if(Integer.parseInt(String.valueOf(pattern.charAt(9))) != 0){
@@ -125,6 +136,7 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
         //legR
         if(Integer.parseInt(String.valueOf(pattern.charAt(10))) != 0){
@@ -133,15 +145,15 @@ public class ProcessCultivation {
             } else {
 
             }
+            numMeridiansCleared++;
         }
 
 
 
-        double cultivationEfficiency = (double) FengShuiCalc.calculateFengShui(player.getWorld(), player.getBlockPos()) / 1200;
+        double cultivationEfficiency = (double) FengShuiCalc.calculateFengShui(player.getWorld(), player.getBlockPos()) / 1000;
 
         List<AxisElements> biomeElements = getBiomeElements(player.getWorld().getBiome(player.getBlockPos()));
         cultivationEfficiency += 0.5 * (int) biomeElements.stream().filter((biomeElement)-> elements.favoredElements().contains(biomeElement)).count();
-
         for(AxisElements biomeElement:biomeElements){
             if(elements.favoredElements().contains(biomeElement))
                 rollElementIncrease(player,biomeElement, cultivationEfficiency+1);
@@ -149,6 +161,10 @@ public class ProcessCultivation {
                 rollElementIncrease(player,biomeElement, cultivationEfficiency);
         }
 
+        double numClearMeridiansModifier = (double) numMeridiansCleared / (pattern.length()-1);
+        cultivationEfficiency *= numClearMeridiansModifier;
+        int newQi = (int) (cultivation.qi() + (getLocationQiLevel(player.getBlockPos()) * cultivationEfficiency));
+        PlayerCultivationAttachments.setQi(player, Math.min(newQi, getRealmMaxQi(cultivation.realm())));
     }
 
     public static void rollMeridianClearing(PlayerEntity player, String key){
