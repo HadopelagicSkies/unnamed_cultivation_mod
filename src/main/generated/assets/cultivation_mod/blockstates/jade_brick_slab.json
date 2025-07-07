@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "cultivation_mod:block/jade_brick_slab"
+    },
+    "type=double": {
+      "model": "cultivation_mod:block/jade_brick_slab_full"
+    },
+    "type=top": {
+      "model": "cultivation_mod:block/jade_brick_slab_top"
+    }
+  }
+}
