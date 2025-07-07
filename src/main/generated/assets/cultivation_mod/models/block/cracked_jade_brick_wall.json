@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "cultivation_mod:block/cracked_jade_bricks"
+  }
+}
