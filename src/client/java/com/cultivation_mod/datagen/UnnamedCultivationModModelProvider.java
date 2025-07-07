@@ -27,7 +27,14 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
         registerWall(blockStateModelGenerator,CultivationModBlocks.JADE_BRICK_WALL,CultivationModBlocks.JADE_BRICKS);
 
         blockStateModelGenerator.registerSimpleCubeAll(CultivationModBlocks.CRACKED_JADE_BRICKS);
+        registerStairs(blockStateModelGenerator,CultivationModBlocks.CRACKED_JADE_BRICK_STAIRS,CultivationModBlocks.CRACKED_JADE_BRICKS);
+        registerSlab(blockStateModelGenerator,CultivationModBlocks.CRACKED_JADE_BRICK_SLAB,CultivationModBlocks.CRACKED_JADE_BRICKS);
+        registerWall(blockStateModelGenerator,CultivationModBlocks.CRACKED_JADE_BRICK_WALL,CultivationModBlocks.CRACKED_JADE_BRICKS);
+
         blockStateModelGenerator.registerSimpleCubeAll(CultivationModBlocks.MOSSY_JADE_BRICKS);
+        registerStairs(blockStateModelGenerator,CultivationModBlocks.MOSSY_JADE_BRICK_STAIRS,CultivationModBlocks.MOSSY_JADE_BRICKS);
+        registerSlab(blockStateModelGenerator,CultivationModBlocks.MOSSY_JADE_BRICK_SLAB,CultivationModBlocks.MOSSY_JADE_BRICKS);
+        registerWall(blockStateModelGenerator,CultivationModBlocks.MOSSY_JADE_BRICK_WALL,CultivationModBlocks.MOSSY_JADE_BRICKS);
 
         blockStateModelGenerator.registerSimpleCubeAll(CultivationModBlocks.POLISHED_JADE_BLOCK);
         registerStairs(blockStateModelGenerator,CultivationModBlocks.POLISHED_JADE_BLOCK_STAIRS,CultivationModBlocks.POLISHED_JADE_BLOCK);
@@ -72,6 +79,7 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
                 Models.TEMPLATE_WALL_POST.upload(block, TextureMap.all(baseBlock),blockStateModelGenerator.modelCollector),
                 Models.TEMPLATE_WALL_SIDE.upload(block,TextureMap.all(baseBlock),blockStateModelGenerator.modelCollector),
                 Models.TEMPLATE_WALL_SIDE_TALL.upload(block, TextureMap.all(baseBlock),blockStateModelGenerator.modelCollector)));
+        Models.WALL_INVENTORY.uploadWithoutVariant(block,"", TextureMap.all(baseBlock),blockStateModelGenerator.modelCollector);
     }
     public void registerSlab(BlockStateModelGenerator blockStateModelGenerator, Block block, Block baseBlock){
         blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(block,

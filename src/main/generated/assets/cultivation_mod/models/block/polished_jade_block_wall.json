@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "cultivation_mod:block/polished_jade_block"
+  }
+}
