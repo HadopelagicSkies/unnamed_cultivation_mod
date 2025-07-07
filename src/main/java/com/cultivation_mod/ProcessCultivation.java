@@ -7,12 +7,9 @@ import com.cultivation_mod.element_setup.PlayerElementAttachments;
 import com.cultivation_mod.element_setup.PlayerElements;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
 
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +45,8 @@ public class ProcessCultivation {
             }
             numMeridiansCleared++;
         }
-        else return;
+        //else return;
+
         //stomach
         if(Integer.parseInt(String.valueOf(pattern.charAt(1))) != 0){
             rollMeridianClearing(player,"heart");
@@ -150,7 +148,7 @@ public class ProcessCultivation {
 
 
 
-        double cultivationEfficiency = (double) FengShuiCalc.calculateFengShui(player.getWorld(), player.getBlockPos()) / 1000;
+        double cultivationEfficiency = Math.max((double) FengShuiCalc.calculateFengShui(player.getWorld(), player.getBlockPos()) / 1000,0.5);
 
         List<AxisElements> biomeElements = getBiomeElements(player.getWorld().getBiome(player.getBlockPos()));
         cultivationEfficiency += 0.5 * (int) biomeElements.stream().filter((biomeElement)-> elements.favoredElements().contains(biomeElement)).count();

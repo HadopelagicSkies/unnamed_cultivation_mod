@@ -36,11 +36,11 @@ public class CultivationScreen extends Screen {
     private float mouseY;
     private int ticksOpen;
     private long startTime;
-    private int statsX = 20;
-    private int statsY = 205;
+    private int statsX = 180;
+    private int statsY = 16;
 
     private static final int routingButtonSize=15;
-    private static final int pentagonCornerOffset = 15;
+    private static final int pentagonX=220;
     private static final int qiMeterHeight = 148;
 
     private static final Identifier CW_BUTTON_ICON = Identifier.of(CultivationMod.MOD_ID, "textures/gui/cultivation_screen/cw_button_icon.png");
@@ -124,10 +124,10 @@ public class CultivationScreen extends Screen {
         super(Text.translatable("gui.cultivation_mod.cultivation_screen"));
         this.player = player;
         this.playerTier = PlayerCultivationAttachments.getRealm(player);
-        this.titleX = 8;
-        this.titleY = 8;
-        this.backgroundWidth = 276;
-        this.backgroundHeight = 253;
+        this.titleX = 225;
+        this.titleY = 7;
+        this.backgroundWidth = 332;
+        this.backgroundHeight = 201;
         this.startTime = MinecraftClient.getInstance().world.getTime();
         PlayerCultivationAttachments.getMeridianProgress(this.player).forEach((meridian, progress) ->{
             meridianDirections.put(meridian,0);
@@ -155,21 +155,24 @@ public class CultivationScreen extends Screen {
         context.drawText(textRenderer,this.title,i + titleX, j + titleY, Colors.BLACK,false);
 
 
-        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_BACKGROUND, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54);
+        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_BACKGROUND, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54);
         if(playerTier >= 0) {
-            context.drawTexture(RenderLayer::getGuiTextured, MERIDIANS, i + 93, j + 27, 0.0F, 0.0F, 91, 113, 91, 113, ColorHelper.getArgb(0, 104, 178));
-            drawMeridianDirection(context,i+1,j+1); // coords were based on the dark texture coords, which are 1 larger each direction
-            drawMeridianClearing(context,i,j);
-            context.drawTexture(RenderLayer::getGuiTextured, DANTIAN, i + 130, j + 92, 0.0F, 0.0F, 17, 17, 17, 17);
+            //shifting around method coords in here rather than changing actual ones further down after changing the background layout
+            //x -59, y +2
+            context.drawTexture(RenderLayer::getGuiTextured, MERIDIANS, i + 34, j + 29, 0.0F, 0.0F, 91, 113, 91, 113, ColorHelper.getArgb(0, 104, 178));
+            drawMeridianDirection(context,i+1-59,j+1+2); // coords were based on the dark texture coords, which are 1 larger each direction
+            drawMeridianClearing(context,i-59,j+2);
+            context.drawTexture(RenderLayer::getGuiTextured, DANTIAN, i + 71, j + 94, 0.0F, 0.0F, 17, 17, 17, 17);
             drawPentagonTextures(context,i,j);
+            drawPentagonText(context,i,j);
             drawStatsText(context,i,j);
         }
         else{
 
         }
         drawButtonIcons(context);
-        context.drawTexture(RenderLayer::getGuiTextured, QI_METER_BACKGROUND, i+backgroundWidth-43, j+15, 0.0F, 0.0F, 18, 157, 18, 157);
-        context.drawTexture(RenderLayer::getGuiTextured, QI_METER, i+backgroundWidth-38, j+20+qiMeterHeight-(qiMeterHeight*PlayerCultivationAttachments.getQi(player)/ProcessCultivation.getRealmMaxQi(playerTier)), 0.0F, 0.0F, 8,(qiMeterHeight*PlayerCultivationAttachments.getQi(player)/ProcessCultivation.getRealmMaxQi(playerTier)) , 8, 148);
+        context.drawTexture(RenderLayer::getGuiTextured, QI_METER_BACKGROUND, i+157, j+10, 0.0F, 0.0F, 18, 157, 18, 157);
+        context.drawTexture(RenderLayer::getGuiTextured, QI_METER, i+162, j+15+qiMeterHeight-(qiMeterHeight*PlayerCultivationAttachments.getQi(player)/ProcessCultivation.getRealmMaxQi(playerTier)), 0.0F, 0.0F, 8,(qiMeterHeight*PlayerCultivationAttachments.getQi(player)/ProcessCultivation.getRealmMaxQi(playerTier)) , 8, 148);
 
         if(acceptCultivationButton.running&&ticksOpen!=0) {
             acceptCultivationButton.setMessage(Text.translatable(CultivationMod.MOD_ID+".cultivation_screen.running",
@@ -188,57 +191,79 @@ public class CultivationScreen extends Screen {
         int totalElements = elementMap.values().stream().mapToInt(value -> value).sum() - elementMap.get(AxisElements.YIN) - elementMap.get(AxisElements.YANG);
         elementMap.forEach(((elements, integer) -> {
             switch (elements){
-                case FIRE -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_FIRE, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.FIRE.getColor()));
-                case WATER -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_WATER, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.WATER.getColor()));
-                case AIR -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_AIR, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.AIR.getColor()));
-                case EARTH -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_EARTH, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.EARTH.getColor()));
-                case LIGHTNING -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_LIGHTNING, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.LIGHTNING.getColor()));
+                case FIRE -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_FIRE, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.FIRE.getColor()));
+                case WATER -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_WATER, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.WATER.getColor()));
+                case AIR -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_AIR, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.AIR.getColor()));
+                case EARTH -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_EARTH, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.EARTH.getColor()));
+                case LIGHTNING -> context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_LIGHTNING, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54,ColorHelper.withAlpha(Math.max(255*integer/ totalElements,50),AxisElements.LIGHTNING.getColor()));
             }
         }));
-        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_MIDDLE, i + backgroundWidth - pentagonCornerOffset-54, j + backgroundHeight - pentagonCornerOffset -54, 0.0F, 0.0F, 54, 54, 54, 54,
+        context.drawTexture(RenderLayer::getGuiTextured, PENTAGON_MIDDLE, i + pentagonX, j + backgroundHeight - 15 -54, 0.0F, 0.0F, 54, 54, 54, 54,
                 elementMap.get(AxisElements.YIN) > elementMap.get(AxisElements.YANG)?ColorHelper.withAlpha((int)(255*0.75),AxisElements.YIN.getColor()):ColorHelper.withAlpha((int)(255*0.75),AxisElements.YANG.getColor()));
     }
 
-    private void drawStatsText(DrawContext context, int i, int j){
+    private void drawPentagonText(DrawContext context, int i, int j){
 
-        context.drawText(textRenderer,Text.translatable("cultivation_mod.qi").append(": " + PlayerCultivationAttachments.getQi(player)),
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.fire"),
+                i + 238, j + 122, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.FIRE)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.FIRE));
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.water"),
+                i + 197, j + 175, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.WATER)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.WATER));
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.air"),
+                i + 204, j + 150, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.AIR)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.AIR));
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.earth"),
+                i + 277, j + 150, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.EARTH)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.EARTH));
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.lightning"),
+                i + 270, j + 175, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.LIGHTNING)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.LIGHTNING));
+    }
+
+    private void drawStatsText(DrawContext context, int i, int j){
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.cultivation_screen.realm",PlayerCultivationAttachments.getRealm(player)),
                 i + statsX, j + statsY, Colors.BLACK,false);
+        context.drawText(textRenderer,Text.translatable("cultivation_mod.cultivation_screen.refined_qi",PlayerCultivationAttachments.getQi(player)),
+                i + statsX, j + statsY+15, Colors.BLACK,false);
+
         context.drawText(textRenderer,Text.translatable("cultivation_mod.yin").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.YIN)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YIN)?" ★":"")),
-                i + statsX, j + statsY+10, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YIN)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX, j + statsY+30, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YIN)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YIN));
         context.drawText(textRenderer,Text.translatable("cultivation_mod.yang").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.YANG)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YANG)?" ★":"")),
-                i + statsX, j + statsY+20, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YANG)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX+70, j + statsY+30, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YANG)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.YANG));
 
         context.drawText(textRenderer,Text.translatable("cultivation_mod.fire").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.FIRE)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.FIRE)?" ★":"")),
-                i + statsX+60, j + statsY, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.FIRE)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX, j + statsY+45, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.FIRE)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.FIRE));
         context.drawText(textRenderer,Text.translatable("cultivation_mod.water").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.WATER)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.WATER)?" ★":"")),
-                i + statsX+60, j + statsY+10, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.WATER)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX+70, j + statsY+45, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.WATER)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.WATER));
+
         context.drawText(textRenderer,Text.translatable("cultivation_mod.air").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.AIR)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.AIR)?" ★":"")),
-                i + statsX+60, j + statsY+20, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.AIR)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX, j + statsY+60, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.AIR)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.AIR));
-
         context.drawText(textRenderer,Text.translatable("cultivation_mod.earth").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.EARTH)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.EARTH)?" ★":"")),
-                i + statsX+120, j + statsY, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.EARTH)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX+70, j + statsY+60, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.EARTH)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.EARTH));
+
         context.drawText(textRenderer,Text.translatable("cultivation_mod.lightning").append(": "+
                         PlayerElementAttachments.getElementLevel(player,AxisElements.LIGHTNING)+
                         (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.LIGHTNING)?" ★":"")),
-                i + statsX+120, j + statsY+10, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.LIGHTNING)? Formatting.GOLD.getColorValue():Colors.BLACK),
+                i + statsX, j + statsY+75, (PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.LIGHTNING)? Formatting.GOLD.getColorValue():Colors.BLACK),
                 PlayerElementAttachments.getFavoredElements(player).contains(AxisElements.LIGHTNING));
     }
 
@@ -506,10 +531,10 @@ public class CultivationScreen extends Screen {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
 
-        int k = i + (this.backgroundWidth/2); //x center line
-        int l = j+100; // dantian y center
+        int k = i + 79; //x center line
+        int l = j + 102; // dantian y center
 
-        this.acceptCultivationButton = this.addDrawableChild(new AcceptCultivationButton(i + 70, j+169, 11, (button) -> {
+        this.acceptCultivationButton = this.addDrawableChild(new AcceptCultivationButton(i + 12, j+174, 11, (button) -> {
             if(((AcceptCultivationButton)button).running){
                 ((AcceptCultivationButton)button).setRunning(false);
                 rotationDirectionButtons.getFirst().visible = true;

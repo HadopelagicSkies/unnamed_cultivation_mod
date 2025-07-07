@@ -11,6 +11,8 @@
   "itemGroup.cultivation_mod": "Cultivation Mod",
 
   "gui.cultivation_mod.cultivation_screen": "Cultivation",
+  "cultivation_mod.cultivation_screen.realm": "Realm: %1$s",
+  "cultivation_mod.cultivation_screen.refined_qi": "Refined Qi: %1$s",
   "cultivation_mod.cultivation_screen.not_running": "Circulate Qi",
   "cultivation_mod.cultivation_screen.running": "Time Elapsed: %1$s",
 
