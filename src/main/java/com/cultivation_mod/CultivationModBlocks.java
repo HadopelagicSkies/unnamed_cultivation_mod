@@ -2,16 +2,20 @@ package com.cultivation_mod;
 
 import com.cultivation_mod.blocks.JadeCauldron;
 import com.cultivation_mod.blocks.SpiritHerb;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
@@ -19,8 +23,20 @@ import java.util.function.Function;
 public class CultivationModBlocks {
     public static final IntProperty LOCAL_ELEMENT = IntProperty.of("local_element",0,4) ;
     public static final IntProperty LOCAL_QI = IntProperty.of("local_qi",0,500) ;
+    public static final RegistryKey<ItemGroup> CULTIVATION_MOD_DECORATIVE_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(CultivationMod.MOD_ID, "item_group_decorative"));
+    public static final ItemGroup CULTIVATION_MOD_DECORATIVE_GROUP = FabricItemGroup.builder()
+            .icon(() -> new ItemStack(CultivationModBlocks.JADE_BRICKS.asItem()))
+            .displayName(Text.translatable("itemGroup.cultivation_mod_decorative"))
+            .build();
+
     public static void initialize() {
+        Registry.register(Registries.ITEM_GROUP, CULTIVATION_MOD_DECORATIVE_GROUP_KEY, CULTIVATION_MOD_DECORATIVE_GROUP);
         ItemGroupEvents.modifyEntriesEvent(CultivationModItems.CULTIVATION_MOD_GROUP_KEY).register((itemGroup) ->
+        {
+            itemGroup.add(CultivationModBlocks.JADE_CAULDRON.asItem());
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(CULTIVATION_MOD_DECORATIVE_GROUP_KEY).register((itemGroup) ->
         {
             itemGroup.add(CultivationModBlocks.JADE_BLOCK.asItem());
             itemGroup.add(CultivationModBlocks.JADE_BLOCK_SLAB.asItem());
@@ -35,10 +51,14 @@ public class CultivationModBlocks {
             itemGroup.add(CultivationModBlocks.JADE_BRICK_STAIRS.asItem());
             itemGroup.add(CultivationModBlocks.JADE_BRICK_WALL.asItem());
             itemGroup.add(CultivationModBlocks.CRACKED_JADE_BRICKS.asItem());
+            itemGroup.add(CultivationModBlocks.CRACKED_JADE_BRICK_SLAB.asItem());
+            itemGroup.add(CultivationModBlocks.CRACKED_JADE_BRICK_STAIRS.asItem());
+            itemGroup.add(CultivationModBlocks.CRACKED_JADE_BRICK_WALL.asItem());
             itemGroup.add(CultivationModBlocks.MOSSY_JADE_BRICKS.asItem());
-            itemGroup.add(CultivationModBlocks.JADE_CAULDRON.asItem());
+            itemGroup.add(CultivationModBlocks.MOSSY_JADE_BRICK_SLAB.asItem());
+            itemGroup.add(CultivationModBlocks.MOSSY_JADE_BRICK_STAIRS.asItem());
+            itemGroup.add(CultivationModBlocks.MOSSY_JADE_BRICK_WALL.asItem());
         });
-
     }
 
     public static <T extends Block> T register(Function<AbstractBlock.Settings, T> constructor, AbstractBlock.Settings blockSettings, String name) {
@@ -125,9 +145,39 @@ public class CultivationModBlocks {
             "cracked_jade_bricks"
     );
 
+    public static final Block CRACKED_JADE_BRICK_SLAB = register(SlabBlock::new,
+            AbstractBlock.Settings.copy(JADE_BLOCK),
+            "cracked_jade_brick_slab"
+    );
+
+    public static final Block CRACKED_JADE_BRICK_STAIRS = register((Block.Settings settings)-> new StairsBlock(JADE_BRICKS.getDefaultState(), settings),
+            AbstractBlock.Settings.copy(JADE_BLOCK),
+            "cracked_jade_brick_stairs"
+    );
+
+    public static final Block CRACKED_JADE_BRICK_WALL = register(WallBlock::new,
+            AbstractBlock.Settings.copy(JADE_BLOCK),
+            "cracked_jade_brick_wall"
+    );
+
     public static final Block MOSSY_JADE_BRICKS = register(
             AbstractBlock.Settings.copy(JADE_BLOCK),
             "mossy_jade_bricks"
+    );
+
+    public static final Block MOSSY_JADE_BRICK_SLAB = register(SlabBlock::new,
+            AbstractBlock.Settings.copy(JADE_BLOCK),
+            "mossy_jade_brick_slab"
+    );
+
+    public static final Block MOSSY_JADE_BRICK_STAIRS = register((Block.Settings settings)-> new StairsBlock(JADE_BRICKS.getDefaultState(), settings),
+            AbstractBlock.Settings.copy(JADE_BLOCK),
+            "mossy_jade_brick_stairs"
+    );
+
+    public static final Block MOSSY_JADE_BRICK_WALL = register(WallBlock::new,
+            AbstractBlock.Settings.copy(JADE_BLOCK),
+            "mossy_jade_brick_wall"
     );
 
     public static final JadeCauldron JADE_CAULDRON = register(JadeCauldron::new,
