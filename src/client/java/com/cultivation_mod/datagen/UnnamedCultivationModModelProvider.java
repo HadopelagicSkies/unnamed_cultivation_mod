@@ -69,6 +69,11 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(CultivationModItems.QI_EFFICIENCY_PILL, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.ROOT_REGROWTH_ELIXIR, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_MASH, Models.GENERATED);
+
+        itemModelGenerator.register(CultivationModItems.COMMON_TECHNIQUE_BOOK, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.UNCOMMON_TECHNIQUE_BOOK, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.RARE_TECHNIQUE_BOOK, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.EPIC_TECHNIQUE_BOOK, Models.GENERATED);
     }
 
     @Override

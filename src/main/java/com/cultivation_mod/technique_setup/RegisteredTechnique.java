@@ -2,6 +2,7 @@ package com.cultivation_mod.technique_setup;
 
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RegisteredTechnique {
@@ -22,6 +23,28 @@ public class RegisteredTechnique {
 
     public void onTickEffect(PlayerEntity player, List<String> nameParts, int mastery, int cost, int power, int range, List<String> modifiers) {
 
+    }
+
+    public String getElement() {
+        return "";
+    }
+
+    public String getSlot(){
+        return "";
+    }
+
+    public String getDesc() {
+        return "";
+    }
+    public String getModifierDesc(String modifier) {
+        return "";
+    }
+
+    public List<String> createNameParts() {
+        return new ArrayList<>();
+    }
+    public List<String> createModifiers() {
+        return new ArrayList<>();
     }
 
 }

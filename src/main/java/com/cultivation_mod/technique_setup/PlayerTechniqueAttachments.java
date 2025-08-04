@@ -12,10 +12,13 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PlayerTechniqueAttachments {
+
+    public static final List<String> slotOptions = List.of("martial","spiritual","sensing","movement", "passive"); //add others as needed
 
     public static final AttachmentType<Map<String,Technique>> PLAYER_TECHNIQUES = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "player_techniques"), infoBuilder ->
             infoBuilder.initializer(HashMap::new)
@@ -50,7 +53,7 @@ public class PlayerTechniqueAttachments {
     public static void setMastery(AttachmentTarget target, String techniqueKey, int mastery){
         Map<String, Technique> newMap = new HashMap<>(target.getAttached(PLAYER_TECHNIQUES));
         Technique oldTechnique = newMap.get(techniqueKey);
-        Technique newTechnique = new Technique(oldTechnique.id(), oldTechnique.nameParts(), oldTechnique.slot(), mastery, oldTechnique.cost(), oldTechnique.power(), oldTechnique.range(), oldTechnique.modifiers());
+        Technique newTechnique = new Technique(oldTechnique.id(), oldTechnique.nameParts(), oldTechnique.realm(), mastery, oldTechnique.cost(), oldTechnique.power(), oldTechnique.range(), oldTechnique.modifiers());
         newMap.put(techniqueKey,newTechnique);
         target.setAttached(PLAYER_TECHNIQUES,newMap);
     }

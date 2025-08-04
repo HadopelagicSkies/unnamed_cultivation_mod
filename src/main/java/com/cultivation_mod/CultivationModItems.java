@@ -15,6 +15,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -51,6 +52,12 @@ public class CultivationModItems {
                     itemGroup.add(CultivationModItems.QI_EFFICIENCY_PILL);
                     itemGroup.add(CultivationModItems.ROOT_REGROWTH_ELIXIR);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_MASH);
+
+                    itemGroup.add(CultivationModItems.COMMON_TECHNIQUE_BOOK);
+                    itemGroup.add(CultivationModItems.UNCOMMON_TECHNIQUE_BOOK);
+                    itemGroup.add(CultivationModItems.RARE_TECHNIQUE_BOOK);
+                    itemGroup.add(CultivationModItems.EPIC_TECHNIQUE_BOOK);
+
                 });
     }
 
@@ -163,4 +170,23 @@ public class CultivationModItems {
             "spirit_herb_mash"
     );
 
+    public static TechniqueBook COMMON_TECHNIQUE_BOOK = register(TechniqueBook::new,
+            new Item.Settings().rarity(Rarity.COMMON),
+            "common_technique_book"
+    );
+
+    public static TechniqueBook UNCOMMON_TECHNIQUE_BOOK = register(TechniqueBook::new,
+            new Item.Settings().rarity(Rarity.UNCOMMON),
+            "uncommon_technique_book"
+    );
+
+    public static TechniqueBook RARE_TECHNIQUE_BOOK = register(TechniqueBook::new,
+            new Item.Settings().rarity(Rarity.RARE),
+            "rare_technique_book"
+    );
+
+    public static TechniqueBook EPIC_TECHNIQUE_BOOK = register(TechniqueBook::new,
+            new Item.Settings().rarity(Rarity.EPIC),
+            "epic_technique_book"
+    );
 }

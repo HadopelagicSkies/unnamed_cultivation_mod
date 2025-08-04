@@ -1,7 +1,7 @@
 package com.cultivation_mod;
 
 import com.cultivation_mod.element_setup.AxisElements;
-import com.cultivation_mod.element_setup.PlayerElements;
+import com.cultivation_mod.technique_setup.Technique;
 import com.mojang.serialization.Codec;
 import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registries;
@@ -25,5 +25,11 @@ public class CultivationModComponents {
             Registries.DATA_COMPONENT_TYPE,
             Identifier.of(CultivationMod.MOD_ID, "item_qi"),
             ComponentType.<Integer>builder().codec(Codec.INT).build()
+    );
+
+    public static final ComponentType<Technique> BOOK_TECHNIQUE = Registry.register(
+            Registries.DATA_COMPONENT_TYPE,
+            Identifier.of(CultivationMod.MOD_ID, "book_technique"),
+            ComponentType.<Technique>builder().codec(Technique.TECHNIQUE_CODEC).build()
     );
 }
