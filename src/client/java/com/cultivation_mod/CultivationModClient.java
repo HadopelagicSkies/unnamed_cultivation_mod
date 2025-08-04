@@ -1,22 +1,16 @@
 package com.cultivation_mod;
 
-import com.cultivation_mod.blocks.JadeCauldron;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.block.BlockColorProvider;
-import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class CultivationModClient implements ClientModInitializer {
@@ -31,9 +25,17 @@ public class CultivationModClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		initKeybindings();
 
-		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.SPIRIT_HERB);
 		ColorProviderRegistry.BLOCK.register(CAULDRON_COLOR,CultivationModBlocks.JADE_CAULDRON);
-		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.SPIRIT_HERB);
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.FIRE_SPIRIT_HERB_CROP);
+		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.FIRE_SPIRIT_HERB_CROP);
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.WATER_SPIRIT_HERB_CROP);
+		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.WATER_SPIRIT_HERB_CROP);
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.AIR_SPIRIT_HERB_CROP);
+		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.AIR_SPIRIT_HERB_CROP);
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.EARTH_SPIRIT_HERB_CROP);
+		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.EARTH_SPIRIT_HERB_CROP);
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.LIGHTNING_SPIRIT_HERB_CROP);
+		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.LIGHTNING_SPIRIT_HERB_CROP);
 
 	}
 

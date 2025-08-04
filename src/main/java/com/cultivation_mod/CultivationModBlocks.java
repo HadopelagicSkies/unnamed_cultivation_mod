@@ -14,15 +14,12 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
 public class CultivationModBlocks {
-    public static final IntProperty LOCAL_ELEMENT = IntProperty.of("local_element",0,4) ;
-    public static final IntProperty LOCAL_QI = IntProperty.of("local_qi",0,500) ;
     public static final RegistryKey<ItemGroup> CULTIVATION_MOD_DECORATIVE_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Identifier.of(CultivationMod.MOD_ID, "item_group_decorative"));
     public static final ItemGroup CULTIVATION_MOD_DECORATIVE_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(CultivationModBlocks.JADE_BRICKS.asItem()))
@@ -59,6 +56,12 @@ public class CultivationModBlocks {
             itemGroup.add(CultivationModBlocks.MOSSY_JADE_BRICK_STAIRS.asItem());
             itemGroup.add(CultivationModBlocks.MOSSY_JADE_BRICK_WALL.asItem());
         });
+
+        FIRE_SPIRIT_HERB_CROP.setDropItems(CultivationModItems.SPIRIT_HERB_FIRE,CultivationModItems.SPIRIT_HERB_SEEDS_FIRE);
+        WATER_SPIRIT_HERB_CROP.setDropItems(CultivationModItems.SPIRIT_HERB_WATER,CultivationModItems.SPIRIT_HERB_SEEDS_WATER);
+        AIR_SPIRIT_HERB_CROP.setDropItems(CultivationModItems.SPIRIT_HERB_AIR,CultivationModItems.SPIRIT_HERB_SEEDS_AIR);
+        EARTH_SPIRIT_HERB_CROP.setDropItems(CultivationModItems.SPIRIT_HERB_EARTH,CultivationModItems.SPIRIT_HERB_SEEDS_EARTH);
+        LIGHTNING_SPIRIT_HERB_CROP.setDropItems(CultivationModItems.SPIRIT_HERB_LIGHTNING,CultivationModItems.SPIRIT_HERB_SEEDS_LIGHTNING);
     }
 
     public static <T extends Block> T register(Function<AbstractBlock.Settings, T> constructor, AbstractBlock.Settings blockSettings, String name) {
@@ -185,9 +188,29 @@ public class CultivationModBlocks {
             "jade_cauldron"
     );
 
-    public static final SpiritHerb SPIRIT_HERB = register(SpiritHerb::new,
-            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP),
-            "spirit_herb"
+    public static final SpiritHerb FIRE_SPIRIT_HERB_CROP = register(SpiritHerb::new,
+            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP).mapColor(MapColor.RED),
+            "fire_spirit_herb_crop"
+    );
+
+    public static final SpiritHerb WATER_SPIRIT_HERB_CROP = register(SpiritHerb::new,
+            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP).mapColor(MapColor.BLUE),
+            "water_spirit_herb_crop"
+    );
+
+    public static final SpiritHerb AIR_SPIRIT_HERB_CROP = register(SpiritHerb::new,
+            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP).mapColor(MapColor.YELLOW),
+            "air_spirit_herb_crop"
+    );
+
+    public static final SpiritHerb EARTH_SPIRIT_HERB_CROP = register(SpiritHerb::new,
+            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP).mapColor(MapColor.BROWN),
+            "earth_spirit_herb_crop"
+    );
+
+    public static final SpiritHerb LIGHTNING_SPIRIT_HERB_CROP = register(SpiritHerb::new,
+            Block.Settings.create().nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP).mapColor(MapColor.PURPLE),
+            "lightning_spirit_herb_crop"
     );
 
 }

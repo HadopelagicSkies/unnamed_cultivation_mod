@@ -2,18 +2,21 @@ package com.cultivation_mod.items;
 
 import com.cultivation_mod.CultivationModComponents;
 import com.cultivation_mod.element_setup.AxisElements;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.util.List;
 import java.util.Map;
 
-public class AspectedQiItem extends Item {
-    public AspectedQiItem(Settings settings) {
-        super(settings);
+public class AspectedQiBlockItem extends BlockItem {
+    public AspectedQiBlockItem(Block block, Settings settings) {
+        super(block,settings);
     }
 
     @Override

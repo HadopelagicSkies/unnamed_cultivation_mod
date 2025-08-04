@@ -25,12 +25,12 @@ public class CultivationMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
-		CultivationModItems.initialize();
-		CultivationModBlocks.initialize();
-		CultivationModBlockEntities.initialize();
 		CultivationModComponents.initialize();
 		CultivationModTags.initialize();
 		CultivationModEffects.initialize();
+		CultivationModItems.initialize();
+		CultivationModBlocks.initialize();
+		CultivationModBlockEntities.initialize();
 		PlayerCultivationAttachments.initialize();
 		PlayerElementAttachments.initialize();
 

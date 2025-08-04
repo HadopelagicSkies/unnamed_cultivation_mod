@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.*;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
 public class UnnamedCultivationModModelProvider extends FabricModelProvider {
@@ -40,6 +41,8 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
         registerStairs(blockStateModelGenerator,CultivationModBlocks.POLISHED_JADE_BLOCK_STAIRS,CultivationModBlocks.POLISHED_JADE_BLOCK);
         registerSlab(blockStateModelGenerator,CultivationModBlocks.POLISHED_JADE_BLOCK_SLAB,CultivationModBlocks.POLISHED_JADE_BLOCK);
         registerWall(blockStateModelGenerator,CultivationModBlocks.POLISHED_JADE_BLOCK_WALL,CultivationModBlocks.POLISHED_JADE_BLOCK);
+
+        //blockStateModelGenerator.registerCrop(CultivationModBlocks.FIRE_SPIRIT_HERB_CROP, Properties.AGE_7,0,0,1,1,2,2,3,3);
     }
 
 
@@ -50,7 +53,12 @@ public class UnnamedCultivationModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_AIR, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_EARTH, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_LIGHTNING, Models.GENERATED);
-        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS, Models.GENERATED);
+
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS_FIRE, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS_WATER, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS_AIR, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS_EARTH, Models.GENERATED);
+        itemModelGenerator.register(CultivationModItems.SPIRIT_HERB_SEEDS_LIGHTNING, Models.GENERATED);
 
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_FIRE, Models.GENERATED);
         itemModelGenerator.register(CultivationModItems.SPIRIT_STONE_WATER, Models.GENERATED);

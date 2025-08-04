@@ -1,10 +1,7 @@
 package com.cultivation_mod;
 
 import com.cultivation_mod.element_setup.AxisElements;
-import com.cultivation_mod.items.AspectedQiItem;
-import com.cultivation_mod.items.QiEfficiencyPill;
-import com.cultivation_mod.items.RootRegrowthElixir;
-import com.cultivation_mod.items.SpiritHerbMash;
+import com.cultivation_mod.items.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Block;
@@ -38,7 +35,12 @@ public class CultivationModItems {
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_AIR);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_EARTH);
                     itemGroup.add(CultivationModItems.SPIRIT_HERB_LIGHTNING);
-                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS);
+
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS_FIRE);
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS_WATER);
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS_AIR);
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS_EARTH);
+                    itemGroup.add(CultivationModItems.SPIRIT_HERB_SEEDS_LIGHTNING);
 
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_FIRE);
                     itemGroup.add(CultivationModItems.SPIRIT_STONE_WATER);
@@ -54,32 +56,33 @@ public class CultivationModItems {
 
 
 
-    private static <T extends Item> T register(Function<Item.Settings, T> constructor, Item.Settings itemSettings, Function<Item.Settings, Item> function , String name) {
+    private static <T extends Item> T register(Function<Item.Settings, T> constructor, Item.Settings itemSettings, String name) {
         Identifier id = Identifier.of(CultivationMod.MOD_ID, name);
 
         RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, id);
         Item.Settings settings = itemSettings.registryKey(key);
-        Item item;
-        if(function != null) {
-            item = function.apply(settings);
-            if (item instanceof BlockItem blockItem) {
-                blockItem.appendBlocks(Item.BLOCK_ITEMS, item);
-            }
+        Item item = constructor.apply(settings);
+        T registeredItem = (T) Registry.register(Registries.ITEM, key, item);
+        if (registeredItem instanceof BlockItem blockItem) {
+            blockItem.appendBlocks(Item.BLOCK_ITEMS, blockItem);
         }
-        else
-            item = constructor.apply(settings);
-        return (T) Registry.register(Registries.ITEM, key, item);
+        return registeredItem;
     }
 
-    private static <T extends Item> T register(Function<Item.Settings, T> constructor, Item.Settings itemSettings, String name) {
-        return register(constructor,itemSettings,null,name);
-    }
     private static Item register(Item.Settings itemSettings, String name) {
         return register(Item::new,itemSettings,name);
     }
 
-    private static Function<Item.Settings, Item> createBlockItemWithUniqueName(Block block) {
-        return (settings) -> new BlockItem(block, settings.useItemPrefixedTranslationKey());
+    private static Function<Item.Settings, BlockItem> createBlockItem(Block block) {
+        return (settings) -> new BlockItem (block, settings.useItemPrefixedTranslationKey());
+    }
+
+    private static Function<Item.Settings, AspectedQiBlockItem> createAspectedQiBlockItem(Block block) {
+        return (settings) -> new AspectedQiBlockItem (block, settings.useItemPrefixedTranslationKey());
+    }
+
+    private static Function<Item.Settings, UnaspectedQiBlockItem> createUnaspectedQiBlockItem(Block block) {
+        return (settings) -> new UnaspectedQiBlockItem (block, settings.useItemPrefixedTranslationKey());
     }
 
     public static final AspectedQiItem SPIRIT_HERB_FIRE = register(AspectedQiItem::new,
@@ -103,10 +106,25 @@ public class CultivationModItems {
             "spirit_herb_lightning"
     );
 
-    public static final Item SPIRIT_HERB_SEEDS = register(Item::new,
-            new Item.Settings(),
-            createBlockItemWithUniqueName(CultivationModBlocks.SPIRIT_HERB),
-            "spirit_herb_seeds"
+    public static final AspectedQiBlockItem SPIRIT_HERB_SEEDS_FIRE = register(createAspectedQiBlockItem(CultivationModBlocks.FIRE_SPIRIT_HERB_CROP),
+            new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.FIRE,25)),
+            "spirit_herb_seeds_fire"
+    );
+    public static final AspectedQiBlockItem SPIRIT_HERB_SEEDS_WATER = register(createAspectedQiBlockItem(CultivationModBlocks.WATER_SPIRIT_HERB_CROP),
+            new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.WATER,25)),
+            "spirit_herb_seeds_water"
+    );
+    public static final AspectedQiBlockItem SPIRIT_HERB_SEEDS_AIR = register(createAspectedQiBlockItem(CultivationModBlocks.AIR_SPIRIT_HERB_CROP),
+            new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.AIR,25)),
+            "spirit_herb_seeds_air"
+    );
+    public static final AspectedQiBlockItem SPIRIT_HERB_SEEDS_EARTH = register(createAspectedQiBlockItem(CultivationModBlocks.EARTH_SPIRIT_HERB_CROP),
+            new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.EARTH,25)),
+            "spirit_herb_seeds_earth"
+    );
+    public static final AspectedQiBlockItem SPIRIT_HERB_SEEDS_LIGHTNING = register(createAspectedQiBlockItem(CultivationModBlocks.LIGHTNING_SPIRIT_HERB_CROP),
+            new Item.Settings().component(CultivationModComponents.ITEM_ELEMENTS, Map.of(AxisElements.LIGHTNING,25)),
+            "spirit_herb_seeds_lightning"
     );
 
     public static final AspectedQiItem SPIRIT_STONE_FIRE = register(AspectedQiItem::new,

@@ -9,5 +9,6 @@ public class CultivationModDataGenerator implements DataGeneratorEntrypoint {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 		pack.addProvider(UnnamedCultivationModModelProvider::new);
 		pack.addProvider(UnnamedCultivationModBlockTagProvider::new);
+		pack.addProvider(UnnamedCultivationModBlockLootTableProvider::new);
 	}
 }
