@@ -2,8 +2,11 @@ package com.cultivation_mod.blocks;
 
 import com.cultivation_mod.CultivationModBlockEntities;
 import com.cultivation_mod.element_setup.AxisElements;
+import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.nbt.*;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
@@ -30,5 +33,19 @@ public class SpiritHerbEntity extends BlockEntity {
 
     public void setGrowthsTicked(int growthsTicked) {
         this.growthsTicked = growthsTicked;
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        AxisElements.ELEMENT_MAP_CODEC.encode(storedElements,registries.getOps(NbtOps.INSTANCE),nbt);
+        Codec.INT.encode(growthsTicked,registries.getOps(NbtOps.INSTANCE),nbt);
+        super.writeNbt(nbt, registries);
+    }
+
+    @Override
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        this.storedElements = AxisElements.ELEMENT_MAP_CODEC.parse(registries.getOps(NbtOps.INSTANCE), nbt.get("elements")).result().orElse(new HashMap<>());
+        this.growthsTicked = Codec.INT.parse(registries.getOps(NbtOps.INSTANCE), nbt.get("growths")).result().orElse(0);
+        super.readNbt(nbt, registries);
     }
 }

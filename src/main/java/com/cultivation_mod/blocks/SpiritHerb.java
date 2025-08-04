@@ -78,25 +78,25 @@ public class SpiritHerb extends CropBlock implements BlockEntityProvider {
                 Map<AxisElements, Integer> storedElements = new HashMap<>(blockEntity.getStoredElements());
                 RegistryEntry<Biome> biome = world.getBiome(pos);
                 for(AxisElements element: storedElements.keySet()){
-                    if(element == AxisElements.FIRE /*&& biome.isIn(CultivationModTags.FIRE_BIOME)*/){ // OR if matches local qi
+                    if(element == AxisElements.FIRE && biome.isIn(CultivationModTags.FIRE_BIOME)){ // OR if matches local qi
                         storedElements.put(element,storedElements.get(element)+5);  // make based on qi value rather than 5 once set up for that
                     }
-                    else if(element == AxisElements.WATER /*&& biome.isIn(CultivationModTags.WATER_BIOME)*/){
+                    else if(element == AxisElements.WATER && biome.isIn(CultivationModTags.WATER_BIOME)){
                         storedElements.put(element,storedElements.get(element)+5);
                     }
-                    else if(element == AxisElements.AIR /*&& biome.isIn(CultivationModTags.AIR_BIOME)*/){
+                    else if(element == AxisElements.AIR && biome.isIn(CultivationModTags.AIR_BIOME)){
                         storedElements.put(element,storedElements.get(element)+5);
                     }
-                    else if(element == AxisElements.EARTH /*&& biome.isIn(CultivationModTags.EARTH_BIOME)*/){
+                    else if(element == AxisElements.EARTH && biome.isIn(CultivationModTags.EARTH_BIOME)){
                         storedElements.put(element,storedElements.get(element)+5);
                     }
-                    else if(element == AxisElements.LIGHTNING /*&& biome.isIn(CultivationModTags.LIGHTNING_BIOME)*/){
+                    else if(element == AxisElements.LIGHTNING && biome.isIn(CultivationModTags.LIGHTNING_BIOME)){
                         storedElements.put(element,storedElements.get(element)+5);
                     }
-                    else if(element == AxisElements.YIN /*&& biome.isIn(CultivationModTags.YIN_BIOME)*/){
+                    else if(element == AxisElements.YIN && biome.isIn(CultivationModTags.YIN_BIOME)){
                         storedElements.put(element,storedElements.get(element)+5);
                     }
-                    else if(element == AxisElements.YANG /*&& biome.isIn(CultivationModTags.YANG_BIOME)*/){
+                    else if(element == AxisElements.YANG && biome.isIn(CultivationModTags.YANG_BIOME)){
                         storedElements.put(element,storedElements.get(element)+5);
                     }
                 }
