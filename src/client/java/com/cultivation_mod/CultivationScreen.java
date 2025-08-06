@@ -3,6 +3,7 @@ package com.cultivation_mod;
 import com.cultivation_mod.cultivation_setup.PlayerCultivationAttachments;
 import com.cultivation_mod.element_setup.AxisElements;
 import com.cultivation_mod.element_setup.PlayerElementAttachments;
+import com.cultivation_mod.packet_payloads.CultScreenPayload;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

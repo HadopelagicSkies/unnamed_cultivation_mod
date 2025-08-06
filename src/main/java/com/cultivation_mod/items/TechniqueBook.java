@@ -15,6 +15,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.Map;
 
 public class TechniqueBook extends Item {
     public TechniqueBook(Settings settings) {
@@ -23,7 +24,12 @@ public class TechniqueBook extends Item {
                         (world, stack, user) -> {
                             Technique technique = stack.get(CultivationModComponents.BOOK_TECHNIQUE);
                             if (technique != null) {
-                                PlayerTechniqueAttachments.setTechnique(user, Technique.registeredTechniques.get(technique.id()).getSlot(), technique);
+                                PlayerTechniqueAttachments.addPlayerLearnedTechniques(user,technique);
+                                if((PlayerTechniqueAttachments.getPlayerTechniques(user)==null)){
+                                    PlayerTechniqueAttachments.setPlayerTechniques(user, Map.of(Technique.registeredTechniques.get(technique.id()).getSlot(), technique));
+                                }
+                                else if(PlayerTechniqueAttachments.getTechnique(user, Technique.registeredTechniques.get(technique.id()).getSlot()) == null)
+                                    PlayerTechniqueAttachments.setTechnique(user, Technique.registeredTechniques.get(technique.id()).getSlot(), technique);
                                 return true;
                             }
                             else {
@@ -48,9 +54,19 @@ public class TechniqueBook extends Item {
             }
             tooltip.add(nameText);
             tooltip.add(Text.translatable(Technique.registeredTechniques.get(technique.id()).getDesc()));
-            tooltip.add(Text.translatable("item.cultivation_mod.technique.element", Technique.registeredTechniques.get(technique.id()).getElement()));
-            tooltip.add(Text.translatable("item.cultivation_mod.technique.cost", technique.cost()));
-            tooltip.add(Text.translatable("item.cultivation_mod.technique.stats", technique.power(),technique.range()));
+
+            String element;
+            if(Technique.registeredTechniques.get(technique.id()).getAxisElement() != null){
+                element = Technique.registeredTechniques.get(technique.id()).getAxisElement().name();
+            }
+            else if(Technique.registeredTechniques.get(technique.id()).getCompoundElement() != null) {
+                element = Technique.registeredTechniques.get(technique.id()).getCompoundElement().name();
+            }
+            else element = "Qi";
+
+            tooltip.add(Text.translatable("cultivation_mod.technique.element", element));
+            tooltip.add(Text.translatable("cultivation_mod.technique.cost", technique.cost()));
+            tooltip.add(Text.translatable("cultivation_mod.technique.stats", technique.power(),technique.range()));
             for (String modifier : technique.modifiers()){
                 tooltip.add(Text.translatable(Technique.registeredTechniques.get(technique.id()).getModifierDesc(modifier)));
             }

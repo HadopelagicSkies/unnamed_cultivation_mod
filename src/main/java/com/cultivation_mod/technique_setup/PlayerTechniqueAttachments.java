@@ -2,29 +2,33 @@ package com.cultivation_mod.technique_setup;
 
 
 import com.cultivation_mod.CultivationMod;
-import com.cultivation_mod.cultivation_setup.PlayerCultivation;
 import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.Identifier;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PlayerTechniqueAttachments {
 
-    public static final List<String> slotOptions = List.of("martial","spiritual","sensing","movement", "passive"); //add others as needed
+    public static final List<String> slotOptions = List.of("martial","spiritual","special","sensing","movement","passive","circulation"); //add others as needed
 
     public static final AttachmentType<Map<String,Technique>> PLAYER_TECHNIQUES = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "player_techniques"), infoBuilder ->
             infoBuilder.initializer(HashMap::new)
                     .persistent(Codec.unboundedMap(Codec.STRING,Technique.TECHNIQUE_CODEC))
                     .copyOnDeath()
                     .syncWith(PacketCodecs.map(HashMap::new,PacketCodecs.STRING,Technique.TECHNIQUE_PACKET_CODEC), AttachmentSyncPredicate.targetOnly()));
+
+    public static final AttachmentType<List<Technique>> PLAYER_LEARNED_TECHNIQUES = AttachmentRegistry.create(Identifier.of(CultivationMod.MOD_ID, "player_learned_techniques"), infoBuilder ->
+            infoBuilder.initializer(ArrayList::new)
+                    .persistent(Codec.list(Technique.TECHNIQUE_CODEC))
+                    .copyOnDeath()
+                    .syncWith(PacketCodecs.collection(ArrayList::new,Technique.TECHNIQUE_PACKET_CODEC), AttachmentSyncPredicate.targetOnly()));
 
     public static void initialize(){};
 
@@ -64,7 +68,35 @@ public class PlayerTechniqueAttachments {
         return Technique.registeredTechniques.get(target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).id());
     }
 
+    public static void runTechniqueEffect(AttachmentTarget target, String techniqueKey, String effectType){
+        Technique technique = target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey);
+        if (technique != null && target instanceof PlayerEntity){
+            if(Objects.equals(effectType, "active")) {
+                target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).activeEffect((PlayerEntity) target);
+            }
+            else if(Objects.equals(effectType, "passive")) {
+                target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).passiveEffect((PlayerEntity) target);
+            }
+            else if(Objects.equals(effectType, "tick")) {
+                target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).onTickEffect((PlayerEntity) target);
+            }
+        }
+    }
 
+    public static void setPlayerLearnedTechniques(AttachmentTarget target,List<Technique> techniques){
+        target.setAttached(PLAYER_LEARNED_TECHNIQUES,techniques);
+    }
+    public static List<Technique> getPlayerLearnedTechniques(AttachmentTarget target, List<Technique> techniques){
+        return target.getAttached(PLAYER_LEARNED_TECHNIQUES);
+    }
+    public static void addPlayerLearnedTechniques(AttachmentTarget target,Technique technique){
+        List<Technique> newList = target.getAttached(PLAYER_LEARNED_TECHNIQUES);
+        if(newList!=null)
+            newList.add(technique);
+        else
+            newList=List.of(technique);
+        target.setAttached(PLAYER_LEARNED_TECHNIQUES,newList);
+    }
 
 
 

@@ -64,13 +64,13 @@ public record Technique(String id, List<String> nameParts, int realm, int master
         ArrayList<String> techniqueIds = new ArrayList<>(registeredTechniques.keySet());
         String techniqueId = techniqueIds.get(user.getRandom().nextBetween(0, techniqueIds.size())-1);
         return new Technique(techniqueId,
-                registeredTechniques.get(techniqueId).createNameParts(),
+                registeredTechniques.get(techniqueId).createNameParts(user),
                 user.getRandom().nextBetween(0,10), //make it close to their realm
                 0,
                 user.getRandom().nextBetween(5,20), //make ranges and powers and cost depend on player realm, item rarity
                 user.getRandom().nextBetween(5,20),
                 user.getRandom().nextBetween(5,20),
-                registeredTechniques.get(techniqueId).createModifiers()
+                registeredTechniques.get(techniqueId).createModifiers(user)
                 );
     }
 

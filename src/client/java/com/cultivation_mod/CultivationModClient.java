@@ -1,25 +1,40 @@
 package com.cultivation_mod;
 
+import com.cultivation_mod.entity.projectile.SwordSlashProjectileEntityModel;
+import com.cultivation_mod.entity.projectile.SwordSlashProjectileEntityRenderer;
+import com.cultivation_mod.packet_payloads.TechniqueActionPayload;
+import com.cultivation_mod.technique_setup.PlayerTechniqueAttachments;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class CultivationModClient implements ClientModInitializer {
 	private static KeyBinding cultivationMenuKeybindings;
+	private static KeyBinding techniqueMenuKeybindings;
+	private static KeyBinding mainTechniquesKeybindings;
+	private static KeyBinding specialTechniqueKeybindings;
+	private static KeyBinding sensingTechniqueKeybindings;
+
 	private static final BlockColorProvider CAULDRON_COLOR = (state, renderView, pos, index) ->
 			renderView != null && pos != null ? BiomeColors.getWaterColor(renderView, pos) : -1;
 	private static final BlockColorProvider SPIRIT_HERB_COLOR = (state, renderView, pos, index) ->
 			renderView != null && pos != null ? state.getMapColor(renderView,pos).color : -1;
 
+	public static final EntityModelLayer SWORD_SLASH_PROJECTILE_MODEL_LAYER = new EntityModelLayer(Identifier.of(CultivationMod.MOD_ID,"sword_slash_projectile"), "sword_slash_projectile");
 
 	@Override
 	public void onInitializeClient() {
@@ -37,6 +52,9 @@ public class CultivationModClient implements ClientModInitializer {
 		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), CultivationModBlocks.LIGHTNING_SPIRIT_HERB_CROP);
 		ColorProviderRegistry.BLOCK.register(SPIRIT_HERB_COLOR,CultivationModBlocks.LIGHTNING_SPIRIT_HERB_CROP);
 
+		EntityRendererRegistry.register(CultivationModEntities.SWORD_SLASH_PROJECTILE,(context) -> new SwordSlashProjectileEntityRenderer(context) {});
+		EntityModelLayerRegistry.registerModelLayer(SWORD_SLASH_PROJECTILE_MODEL_LAYER, SwordSlashProjectileEntityModel::getTexturedModelData);
+
 	}
 
 	public void initKeybindings() {
@@ -44,12 +62,46 @@ public class CultivationModClient implements ClientModInitializer {
 				InputUtil.Type.KEYSYM,
 				GLFW.GLFW_KEY_C,
 				"category.cultivation_mod.keybindings"));
+		techniqueMenuKeybindings = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.cultivation_mod.technique_screen",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_B,
+				"category.cultivation_mod.keybindings"));
+		mainTechniquesKeybindings = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.cultivation_mod.main_techniques",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_G,
+				"category.cultivation_mod.keybindings"));
+		sensingTechniqueKeybindings = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.cultivation_mod.sensing_technique",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_Y,
+				"category.cultivation_mod.keybindings"));
+		specialTechniqueKeybindings = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.cultivation_mod.special_technique",
+				InputUtil.Type.KEYSYM,
+				GLFW.GLFW_KEY_V,
+				"category.cultivation_mod.keybindings"));
+
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player != null) {
 				while (cultivationMenuKeybindings.wasPressed()) {
-						client.setScreen(new CultivationScreen(client.player));
+					client.setScreen(new CultivationScreen(client.player));
 				}
+				while (techniqueMenuKeybindings.wasPressed()){
+					client.setScreen(new CultivationScreen(client.player)); // replace with technique screen
+				}
+
+				while (mainTechniquesKeybindings.wasPressed()){
+					if(PlayerTechniqueAttachments.getTechnique(client.player,"martial")!=null||PlayerTechniqueAttachments.getTechnique(client.player,"spiritual")!=null)
+						ClientPlayNetworking.send(new TechniqueActionPayload(true,"main"));
+				}
+				while (sensingTechniqueKeybindings.wasPressed()){
+					if(PlayerTechniqueAttachments.getTechnique(client.player,"sensing")!=null)
+						ClientPlayNetworking.send(new TechniqueActionPayload(true,"sensing"));
+				}
+				while (specialTechniqueKeybindings.wasPressed()){
+					if(PlayerTechniqueAttachments.getTechnique(client.player,"special")!=null)
+						ClientPlayNetworking.send(new TechniqueActionPayload(true,"special"));
+				}
+
 			}
 		});
 	}

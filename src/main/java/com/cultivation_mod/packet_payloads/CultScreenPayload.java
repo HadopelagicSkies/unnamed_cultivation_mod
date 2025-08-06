@@ -1,5 +1,6 @@
-package com.cultivation_mod;
+package com.cultivation_mod.packet_payloads;
 
+import com.cultivation_mod.CultivationMod;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
