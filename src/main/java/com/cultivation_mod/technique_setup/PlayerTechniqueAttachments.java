@@ -51,13 +51,13 @@ public class PlayerTechniqueAttachments {
     }
 
     public static int getMastery(AttachmentTarget target, String techniqueKey){
-        return target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).mastery();
+        return target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).mastery;
     }
 
     public static void setMastery(AttachmentTarget target, String techniqueKey, int mastery){
         Map<String, Technique> newMap = new HashMap<>(target.getAttached(PLAYER_TECHNIQUES));
         Technique oldTechnique = newMap.get(techniqueKey);
-        Technique newTechnique = new Technique(oldTechnique.id(), oldTechnique.nameParts(), oldTechnique.realm(), mastery, oldTechnique.cost(), oldTechnique.power(), oldTechnique.range(), oldTechnique.modifiers());
+        Technique newTechnique = new Technique(oldTechnique.id, oldTechnique.nameParts, oldTechnique.realm, mastery, oldTechnique.cost, oldTechnique.power, oldTechnique.range, oldTechnique.modifiers);
         newMap.put(techniqueKey,newTechnique);
         target.setAttached(PLAYER_TECHNIQUES,newMap);
     }
@@ -65,7 +65,7 @@ public class PlayerTechniqueAttachments {
 
     //standalone
     public static RegisteredTechnique getRegisteredTechnique(AttachmentTarget target, String techniqueKey){
-        return Technique.registeredTechniques.get(target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).id());
+        return Technique.registeredTechniques.get(target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).id);
     }
 
     public static void runTechniqueEffect(AttachmentTarget target, String techniqueKey, String effectType){
