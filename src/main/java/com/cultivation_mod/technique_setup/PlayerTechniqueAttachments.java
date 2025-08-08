@@ -51,13 +51,13 @@ public class PlayerTechniqueAttachments {
     }
 
     public static int getMastery(AttachmentTarget target, String techniqueKey){
-        return target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).mastery();
+        return target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).mastery;
     }
 
     public static void setMastery(AttachmentTarget target, String techniqueKey, int mastery){
         Map<String, Technique> newMap = new HashMap<>(target.getAttached(PLAYER_TECHNIQUES));
         Technique oldTechnique = newMap.get(techniqueKey);
-        Technique newTechnique = new Technique(oldTechnique.id(), oldTechnique.nameParts(), oldTechnique.realm(), mastery, oldTechnique.cost(), oldTechnique.power(), oldTechnique.range(), oldTechnique.modifiers());
+        Technique newTechnique = new Technique(oldTechnique.id, oldTechnique.nameParts, oldTechnique.realm, mastery, oldTechnique.cost, oldTechnique.power, oldTechnique.range, oldTechnique.modifiers);
         newMap.put(techniqueKey,newTechnique);
         target.setAttached(PLAYER_TECHNIQUES,newMap);
     }
@@ -65,7 +65,7 @@ public class PlayerTechniqueAttachments {
 
     //standalone
     public static RegisteredTechnique getRegisteredTechnique(AttachmentTarget target, String techniqueKey){
-        return Technique.registeredTechniques.get(target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).id());
+        return Technique.registeredTechniques.get(target.getAttached(PLAYER_TECHNIQUES).get(techniqueKey).id);
     }
 
     public static void runTechniqueEffect(AttachmentTarget target, String techniqueKey, String effectType){
@@ -86,18 +86,20 @@ public class PlayerTechniqueAttachments {
     public static void setPlayerLearnedTechniques(AttachmentTarget target,List<Technique> techniques){
         target.setAttached(PLAYER_LEARNED_TECHNIQUES,techniques);
     }
+
     public static List<Technique> getPlayerLearnedTechniques(AttachmentTarget target, List<Technique> techniques){
         return target.getAttached(PLAYER_LEARNED_TECHNIQUES);
     }
+
     public static void addPlayerLearnedTechniques(AttachmentTarget target,Technique technique){
-        List<Technique> newList = target.getAttached(PLAYER_LEARNED_TECHNIQUES);
-        if(newList!=null)
+        List<Technique> oldList = target.getAttached(PLAYER_LEARNED_TECHNIQUES);
+        List<Technique> newList;
+        if(oldList!=null) {
+            newList = new ArrayList<>(oldList);
             newList.add(technique);
-        else
+        } else
             newList=List.of(technique);
-        target.setAttached(PLAYER_LEARNED_TECHNIQUES,newList);
+        target.setAttached(PLAYER_LEARNED_TECHNIQUES, newList);
     }
-
-
 
 }

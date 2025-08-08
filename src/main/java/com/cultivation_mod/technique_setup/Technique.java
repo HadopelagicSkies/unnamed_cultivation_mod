@@ -14,38 +14,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record Technique(String id, List<String> nameParts, int realm, int mastery, int cost, int power, int range, List<String> modifiers) {
+public class Technique {
+    public final String id;
+    public final List<String> nameParts;
+    public final int realm;
+    public final int mastery;
+    public final int cost;
+    public final int power;
+    public final int range;
+    public final List<String> modifiers;
+
+    public Technique(String id, List<String> nameParts, int realm, int mastery, int cost, int power, int range, List<String> modifiers) {
+        this.id = id;
+        this.nameParts = nameParts;
+        this.realm = realm;
+        this.mastery = mastery;
+        this.cost = cost;
+        this.power = power;
+        this.range = range;
+        this.modifiers = modifiers;
+    }
 
     public static Map<String,RegisteredTechnique> registeredTechniques = new HashMap<>();
 
     public static final Codec<Technique> TECHNIQUE_CODEC = RecordCodecBuilder.create(i -> i.group(
-            Codec.STRING.fieldOf("id").forGetter(Technique::id),
-            Codec.STRING.listOf().fieldOf("nameParts").forGetter(Technique::nameParts),
-            Codec.INT.fieldOf("realm").forGetter(Technique::realm),
-            Codec.INT.fieldOf("mastery").forGetter(Technique::mastery),
-            Codec.INT.fieldOf("cost").forGetter(Technique::cost),
-            Codec.INT.fieldOf("power").forGetter(Technique::power),
-            Codec.INT.fieldOf("range").forGetter(Technique::range),
-            Codec.STRING.listOf().fieldOf("modifiers").forGetter(Technique::modifiers)
+            Codec.STRING.fieldOf("id").forGetter((technique) -> technique.id),
+            Codec.STRING.listOf().fieldOf("nameParts").forGetter((technique) -> technique.nameParts),
+            Codec.INT.fieldOf("realm").forGetter((technique) -> technique.realm),
+            Codec.INT.fieldOf("mastery").forGetter((technique) -> technique.mastery),
+            Codec.INT.fieldOf("cost").forGetter((technique) -> technique.cost),
+            Codec.INT.fieldOf("power").forGetter((technique) -> technique.power),
+            Codec.INT.fieldOf("range").forGetter((technique) -> technique.range),
+            Codec.STRING.listOf().fieldOf("modifiers").forGetter((technique) -> technique.modifiers)
     ).apply(i, Technique::new));
 
     public static final PacketCodec<ByteBuf, Technique> TECHNIQUE_PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.STRING,
-            Technique::id,
-            PacketCodecs.STRING.collect(PacketCodecs.toList()),
-            Technique::nameParts,
-            PacketCodecs.INTEGER,
-            Technique::realm,
-            PacketCodecs.INTEGER,
-            Technique::mastery,
-            PacketCodecs.INTEGER,
-            Technique::cost,
-            PacketCodecs.INTEGER,
-            Technique::power,
-            PacketCodecs.INTEGER,
-            Technique::range,
-            PacketCodecs.STRING.collect(PacketCodecs.toList()),
-            Technique::modifiers,
+            PacketCodecs.STRING, (technique) -> technique.id,
+            PacketCodecs.STRING.collect(PacketCodecs.toList()), (technique) -> technique.nameParts,
+            PacketCodecs.INTEGER, (technique) -> technique.realm,
+            PacketCodecs.INTEGER, (technique) -> technique.mastery,
+            PacketCodecs.INTEGER, (technique) -> technique.cost,
+            PacketCodecs.INTEGER, (technique) -> technique.power,
+            PacketCodecs.INTEGER, (technique) -> technique.range,
+            PacketCodecs.STRING.collect(PacketCodecs.toList()), (technique) -> technique.modifiers,
             Technique::new);
 
     public void activeEffect(PlayerEntity player) {
